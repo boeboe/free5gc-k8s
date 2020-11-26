@@ -37,7 +37,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-smf
-          image: ghcr.io/sumichaaan/free5gc-k8s/f5gc-smf:v3.0.4
+          image: boeboe/f5gc-smf:v3.0.4
           imagePullPolicy: IfNotPresent
           # imagePullPolicy: Always
           securityContext:
