@@ -77,7 +77,7 @@ push-base:
 create-ns:
 	kubectl apply -f ${K8S_DEPLOY_DIR}/
 delete-ns:
-	kubectl delete -f ${K8S_DEPLOY_DIR}/
+	kubectl delete -f ${K8S_DEPLOY_DIR}/ || true
 
 
 ### GNBSIM - a 5G SA gNB/UE simulator for testing 5GC system ###
@@ -93,7 +93,7 @@ push-gnbsim:
 deploy-gnbsim:
 	kubectl apply -k ${GNBSIM_K8S_DEPLOY_DIR}
 undeploy-gnbsim:
-	kubectl delete -k ${GNBSIM_K8S_DEPLOY_DIR}
+	kubectl delete -k ${GNBSIM_K8S_DEPLOY_DIR} || true
 
 
 ### AMF - Access and Mobility Management Function ###
@@ -108,7 +108,7 @@ push-amf:
 deploy-amf:
 	kubectl apply -k ${AMF_K8S_DEPLOY_DIR}
 undeploy-amf:
-	kubectl delete -k ${AMF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${AMF_K8S_DEPLOY_DIR} || true
 
 
 ### SMF - Session Management Function ###
@@ -123,7 +123,7 @@ push-smf:
 deploy-smf:
 	kubectl apply -k ${SMF_K8S_DEPLOY_DIR}
 undeploy-smf:
-	kubectl delete -k ${SMF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${SMF_K8S_DEPLOY_DIR} || true
 
 
 ### UPF - User Plane Function ###
@@ -138,7 +138,7 @@ push-upf:
 deploy-upf:
 	kubectl apply -k ${UPF_K8S_DEPLOY_DIR}
 undeploy-upf:
-	kubectl delete -k ${UPF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${UPF_K8S_DEPLOY_DIR} || true
 
 
 ### NRF - Network Repository Function ###
@@ -153,7 +153,7 @@ push-nrf:
 deploy-nrf:
 	kubectl apply -k ${NRF_K8S_DEPLOY_DIR}
 undeploy-nrf:
-	kubectl delete -k ${NRF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${NRF_K8S_DEPLOY_DIR} || true
 
 
 ### AUSF - Authentication Server Function ###
@@ -168,7 +168,7 @@ push-ausf:
 deploy-ausf:
 	kubectl apply -k ${AUSF_K8S_DEPLOY_DIR}
 undeploy-ausf:
-	kubectl delete -k ${AUSF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${AUSF_K8S_DEPLOY_DIR} || true
 
 
 ### NSSF - Network slice selection function ###
@@ -183,7 +183,7 @@ push-nssf:
 deploy-nssf:
 	kubectl apply -k ${NSSF_K8S_DEPLOY_DIR}
 undeploy-nssf:
-	kubectl delete -k ${NSSF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${NSSF_K8S_DEPLOY_DIR} || true
 
 
 ## PCF - Policy Control Function ###
@@ -198,7 +198,7 @@ push-pcf:
 deploy-pcf:
 	kubectl apply -k ${PCF_K8S_DEPLOY_DIR}
 undeploy-pcf:
-	kubectl delete -k ${PCF_K8S_DEPLOY_DIR}
+	kubectl delete -k ${PCF_K8S_DEPLOY_DIR} || true
 
 
 ### UDM - Unified Data Manager Function ###
@@ -213,7 +213,7 @@ push-udm:
 deploy-udm:
 	kubectl apply -k ${UDM_K8S_DEPLOY_DIR}
 undeploy-udm:
-	kubectl delete -k ${UDM_K8S_DEPLOY_DIR}
+	kubectl delete -k ${UDM_K8S_DEPLOY_DIR} || true
 
 
 ### UDR - Unified Data Repository ###
@@ -228,7 +228,7 @@ push-udr:
 deploy-udr:
 	kubectl apply -k ${UDR_K8S_DEPLOY_DIR}
 undeploy-udr:
-	kubectl delete -k ${UDR_K8S_DEPLOY_DIR}
+	kubectl delete -k ${UDR_K8S_DEPLOY_DIR} || true
 
 
 ### WebUI ###
@@ -243,21 +243,19 @@ push-webui:
 deploy-webui:
 	kubectl apply -k ${WEBUI_K8S_DEPLOY_DIR}
 undeploy-webui:
-	kubectl delete -k ${WEBUI_K8S_DEPLOY_DIR}
+	kubectl delete -k ${WEBUI_K8S_DEPLOY_DIR} || true
 
 
 clean:
-	docker rmi ${DOCKER_USER}/${F5GC_BASE_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_GNBSIM_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_AMF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_SMF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_UPF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_NRF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_AUSF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_NSSF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_PCF_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_UDM_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_UDR_NAME}:${DOCKER_TAG}
-	docker rmi ${DOCKER_USER}/${F5GC_WEBUI_NAME}:${DOCKER_TAG}
-
-
+	docker rmi ${DOCKER_USER}/${F5GC_BASE_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_GNBSIM_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_AMF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_SMF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_UPF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_NRF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_AUSF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_NSSF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_PCF_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_UDM_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_UDR_NAME}:${DOCKER_TAG} || true
+	docker rmi ${DOCKER_USER}/${F5GC_WEBUI_NAME}:${DOCKER_TAG} || true
