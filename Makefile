@@ -1,16 +1,16 @@
 # Makefile
-F5GC_BASE_NAME           ?= f5gc-build-base
-F5GC_GNBSIM_NAME         ?= f5gc-gnbsim
-F5GC_AMF_NAME            ?= f5gc-amf
-F5GC_SMF_NAME            ?= f5gc-smf
-F5GC_UPF_NAME            ?= f5gc-upf
-F5GC_NRF_NAME		 	 ?= f5gc-nrf
-F5GC_AUSF_NAME           ?= f5gc-ausf
-F5GC_NSSF_NAME           ?= f5gc-nssf
-F5GC_PCF_NAME            ?= f5gc-pcf
-F5GC_UDM_NAME            ?= f5gc-udm
-F5GC_UDR_NAME            ?= f5gc-udr
-F5GC_WEBUI_NAME		 	 ?= f5gc-webui
+F5GC_BASE_NAME          ?= f5gc-build-base
+F5GC_GNBSIM_NAME        ?= f5gc-gnbsim
+F5GC_AMF_NAME           ?= f5gc-amf
+F5GC_SMF_NAME           ?= f5gc-smf
+F5GC_UPF_NAME           ?= f5gc-upf
+F5GC_NRF_NAME		 	?= f5gc-nrf
+F5GC_AUSF_NAME          ?= f5gc-ausf
+F5GC_NSSF_NAME          ?= f5gc-nssf
+F5GC_PCF_NAME           ?= f5gc-pcf
+F5GC_UDM_NAME           ?= f5gc-udm
+F5GC_UDR_NAME           ?= f5gc-udr
+F5GC_WEBUI_NAME		 	?= f5gc-webui
 
 DOCKER_ENV              ?= DOCKER_BUILDKIT=1
 DOCKER_TAG              ?= v3.0.4
@@ -62,6 +62,7 @@ push: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-n
 deploy: deploy-base deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all images to k8s
 
 
+### Base Image ###
 build-base:
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${BASE_IMAGE_NAME} \
@@ -71,6 +72,7 @@ push-base:
 	${DOCKER_ENV} docker push ${BASE_IMAGE_NAME}
 
 
+### GNBSIM - a 5G SA gNB/UE simulator for testing 5GC system ###
 build-gnbsim:
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${GNBSIM_IMAGE_NAME} \
@@ -83,6 +85,8 @@ push-gnbsim:
 deploy-gnbsim:
 	kubectl apply -k ${GNBSIM_K8S_DEPLOY_DIR}
 
+
+### AMF - Access and Mobility Management Function ###
 build-amf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${AMF_IMAGE_NAME} \
@@ -95,6 +99,7 @@ deploy-amf:
 	kubectl apply -k ${AMF_K8S_DEPLOY_DIR}
 
 
+### SMF - Session Management Function ###
 build-smf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${SMF_IMAGE_NAME} \
@@ -107,6 +112,7 @@ deploy-smf:
 	kubectl apply -k ${SMF_K8S_DEPLOY_DIR}
 
 
+### UPF - User Plane Function ###
 build-upf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UPF_IMAGE_NAME} \
@@ -119,6 +125,7 @@ deploy-upf:
 	kubectl apply -k ${UPF_K8S_DEPLOY_DIR}
 
 
+### NRF - Network Repository Function ###
 build-nrf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${NRF_IMAGE_NAME} \
@@ -131,6 +138,7 @@ deploy-nrf:
 	kubectl apply -k ${NRF_K8S_DEPLOY_DIR}
 
 
+### AUSF - Authentication Server Function ###
 build-ausf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${AUSF_IMAGE_NAME} \
@@ -143,6 +151,7 @@ deploy-ausf:
 	kubectl apply -k ${AUSF_K8S_DEPLOY_DIR}
 
 
+### NSSF - Network slice selection function ###
 build-nssf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${NSSF_IMAGE_NAME} \
@@ -155,6 +164,7 @@ deploy-nssf:
 	kubectl apply -k ${NSSF_K8S_DEPLOY_DIR}
 
 
+## PCF - Policy Control Function ###
 build-pcf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${PCF_IMAGE_NAME} \
@@ -167,6 +177,7 @@ deploy-pcf:
 	kubectl apply -k ${PCF_K8S_DEPLOY_DIR}
 
 
+### UDM - Unified Data Manager Function ###
 build-udm: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UDM_IMAGE_NAME} \
@@ -179,6 +190,7 @@ deploy-udm:
 	kubectl apply -k ${UDM_K8S_DEPLOY_DIR}
 
 
+### UDR - Unified Data Repository ###
 build-udr: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UDR_IMAGE_NAME} \
@@ -191,6 +203,7 @@ deploy-udr:
 	kubectl apply -k ${UDR_K8S_DEPLOY_DIR}
 
 
+### WebUI ###
 build-webui: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${WEBUI_IMAGE_NAME} \
