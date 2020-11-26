@@ -43,10 +43,15 @@ PCF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_PCF_NAME}
 UDM_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_UDM_NAME}
 UDR_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_UDR_NAME}
 WEBUI_K8S_DEPLOY_DIR    ?= ${K8S_DEPLOY_DIR}/${F5GC_WEBUI_NAME}
+MONGODB_K8S_DEPLOY_DIR  ?= ${K8S_DEPLOY_DIR}/f5gc-mongodb
+N6DUMMY_K8S_DEPLOY_DIR  ?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy
+
 
 .PHONY: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-ausf build-nssf build-pcf build-udm build-udr build-webui
 .PHONY: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui
-.PHONY: deploy-base deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui
+.PHONY: create-ns deploy-mongodb deploy-n6dummy deploy-base deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui
+.PHONY: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui undeploy-n6dummy undeploy-mongodb delete-ns
+
 .PHONY: help
 
 help: ## This help
@@ -59,9 +64,9 @@ build: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-aus
 
 push: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui ## Push all images to dockerhub
 
-deploy: create-ns deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all to k8s
+deploy: create-ns deploy-mongodb deploy-n6dummy deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all to k8s
 
-undeploy: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui delete-ns ## Undeploy all from k8s
+undeploy: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui undeploy-n6dummy undeploy-mongodb delete-ns ## Undeploy all from k8s
 
 
 ### Base Image ###
@@ -78,6 +83,20 @@ create-ns:
 	kubectl apply -f ${K8S_DEPLOY_DIR}/
 delete-ns:
 	kubectl delete -f ${K8S_DEPLOY_DIR}/ || true
+
+
+### Mongo DBB ###
+deploy-mongodb:
+	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR}
+undeploy-mongodb:
+	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
+
+
+### N6 Dummy - Between User Plan Function (UPF) and DN (Data Network) ###
+deploy-n6dummy:
+	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR}
+undeploy-n6dummy:
+	kubectl delete -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
 
 
 ### GNBSIM - a 5G SA gNB/UE simulator for testing 5GC system ###
