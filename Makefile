@@ -59,7 +59,9 @@ build: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-aus
 
 push: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui ## Push all images to dockerhub
 
-deploy: create-ns deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all images to k8s
+deploy: create-ns deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all to k8s
+
+undeploy: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui delete-ns ## Undeploy all from k8s
 
 
 ### Base Image ###
@@ -71,8 +73,11 @@ build-base:
 push-base:
 	${DOCKER_ENV} docker push ${BASE_IMAGE_NAME}
 
+### K8S Namespace ###
 create-ns:
 	kubectl apply -f ${K8S_DEPLOY_DIR}/
+delete-ns:
+	kubectl delete -f ${K8S_DEPLOY_DIR}/
 
 
 ### GNBSIM - a 5G SA gNB/UE simulator for testing 5GC system ###
@@ -87,6 +92,8 @@ push-gnbsim:
 	${DOCKER_ENV} docker push ${GNBSIM_IMAGE_NAME}
 deploy-gnbsim:
 	kubectl apply -k ${GNBSIM_K8S_DEPLOY_DIR}
+undeploy-gnbsim:
+	kubectl delete -k ${GNBSIM_K8S_DEPLOY_DIR}
 
 
 ### AMF - Access and Mobility Management Function ###
@@ -100,6 +107,8 @@ push-amf:
 	${DOCKER_ENV} docker push ${AMF_IMAGE_NAME}
 deploy-amf:
 	kubectl apply -k ${AMF_K8S_DEPLOY_DIR}
+undeploy-amf:
+	kubectl delete -k ${AMF_K8S_DEPLOY_DIR}
 
 
 ### SMF - Session Management Function ###
@@ -113,6 +122,8 @@ push-smf:
 	${DOCKER_ENV} docker push ${SMF_IMAGE_NAME}
 deploy-smf:
 	kubectl apply -k ${SMF_K8S_DEPLOY_DIR}
+undeploy-smf:
+	kubectl delete -k ${SMF_K8S_DEPLOY_DIR}
 
 
 ### UPF - User Plane Function ###
@@ -126,6 +137,8 @@ push-upf:
 	${DOCKER_ENV} docker push ${UPF_IMAGE_NAME}
 deploy-upf:
 	kubectl apply -k ${UPF_K8S_DEPLOY_DIR}
+undeploy-upf:
+	kubectl delete -k ${UPF_K8S_DEPLOY_DIR}
 
 
 ### NRF - Network Repository Function ###
@@ -139,6 +152,8 @@ push-nrf:
 	${DOCKER_ENV} docker push ${NRF_IMAGE_NAME}
 deploy-nrf:
 	kubectl apply -k ${NRF_K8S_DEPLOY_DIR}
+undeploy-nrf:
+	kubectl delete -k ${NRF_K8S_DEPLOY_DIR}
 
 
 ### AUSF - Authentication Server Function ###
@@ -152,6 +167,8 @@ push-ausf:
 	${DOCKER_ENV} docker push ${AUSF_IMAGE_NAME}
 deploy-ausf:
 	kubectl apply -k ${AUSF_K8S_DEPLOY_DIR}
+undeploy-ausf:
+	kubectl delete -k ${AUSF_K8S_DEPLOY_DIR}
 
 
 ### NSSF - Network slice selection function ###
@@ -165,6 +182,8 @@ push-nssf:
 	${DOCKER_ENV} docker push ${NSSF_IMAGE_NAME}
 deploy-nssf:
 	kubectl apply -k ${NSSF_K8S_DEPLOY_DIR}
+undeploy-nssf:
+	kubectl delete -k ${NSSF_K8S_DEPLOY_DIR}
 
 
 ## PCF - Policy Control Function ###
@@ -178,6 +197,8 @@ push-pcf:
 	${DOCKER_ENV} docker push ${PCF_IMAGE_NAME}
 deploy-pcf:
 	kubectl apply -k ${PCF_K8S_DEPLOY_DIR}
+undeploy-pcf:
+	kubectl delete -k ${PCF_K8S_DEPLOY_DIR}
 
 
 ### UDM - Unified Data Manager Function ###
@@ -191,6 +212,8 @@ push-udm:
 	${DOCKER_ENV} docker push ${UDM_IMAGE_NAME}
 deploy-udm:
 	kubectl apply -k ${UDM_K8S_DEPLOY_DIR}
+undeploy-udm:
+	kubectl delete -k ${UDM_K8S_DEPLOY_DIR}
 
 
 ### UDR - Unified Data Repository ###
@@ -204,6 +227,8 @@ push-udr:
 	${DOCKER_ENV} docker push ${UDR_IMAGE_NAME}
 deploy-udr:
 	kubectl apply -k ${UDR_K8S_DEPLOY_DIR}
+undeploy-udr:
+	kubectl delete -k ${UDR_K8S_DEPLOY_DIR}
 
 
 ### WebUI ###
@@ -217,6 +242,8 @@ push-webui:
 	${DOCKER_ENV} docker push ${WEBUI_IMAGE_NAME}
 deploy-webui:
 	kubectl apply -k ${WEBUI_K8S_DEPLOY_DIR}
+undeploy-webui:
+	kubectl delete -k ${WEBUI_K8S_DEPLOY_DIR}
 
 
 clean:
