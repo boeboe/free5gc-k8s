@@ -59,7 +59,7 @@ build: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-aus
 
 push: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui ## Push all images to dockerhub
 
-deploy: deploy-base deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all images to k8s
+deploy: create-ns deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all images to k8s
 
 
 ### Base Image ###
@@ -70,6 +70,9 @@ build-base:
 		./images/${F5GC_BASE_NAME}
 push-base:
 	${DOCKER_ENV} docker push ${BASE_IMAGE_NAME}
+
+create-ns:
+	kubectl apply -f ${K8S_DEPLOY_DIR}/
 
 
 ### GNBSIM - a 5G SA gNB/UE simulator for testing 5GC system ###
