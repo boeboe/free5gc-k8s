@@ -22,8 +22,7 @@ spec:
       containers:
         - name: f5gc-webui
           image: boeboe/f5gc-webui:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: false
           volumeMounts:

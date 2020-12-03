@@ -27,8 +27,7 @@ spec:
       containers:
         - name: f5gc-pcf
           image: boeboe/f5gc-pcf:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: false
           volumeMounts:

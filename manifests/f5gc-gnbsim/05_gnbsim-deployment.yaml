@@ -38,8 +38,7 @@ spec:
       containers:
         - name: f5gc-gnbsim
           image: boeboe/f5gc-gnbsim:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           command: ["sh"]
           tty: true
           securityContext:

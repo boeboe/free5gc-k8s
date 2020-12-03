@@ -35,8 +35,7 @@ spec:
       containers:
         - name: f5gc-smf
           image: boeboe/f5gc-smf:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: false
           volumeMounts:
@@ -53,7 +52,7 @@ spec:
               protocol: UDP
         - name: tcpdump
           image: corfr/tcpdump
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - /bin/sleep
             - infinity

@@ -27,8 +27,7 @@ spec:
       containers:
         - name: f5gc-udm
           image: boeboe/f5gc-udm:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: false
           volumeMounts:

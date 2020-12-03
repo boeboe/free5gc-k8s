@@ -30,8 +30,7 @@ spec:
       containers:
         - name: f5gc-upf
           image: boeboe/f5gc-upf:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: false
             capabilities:

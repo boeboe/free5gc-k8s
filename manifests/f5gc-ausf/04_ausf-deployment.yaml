@@ -27,8 +27,7 @@ spec:
       containers:
         - name: f5gc-ausf
           image: boeboe/f5gc-ausf:v3.0.4
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           securityContext:
             privileged: true
           volumeMounts:

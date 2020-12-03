@@ -3937,7 +3937,7 @@ spec:
       containers:
         - name: tigera-operator
           image: quay.io/tigera/operator:v1.10.3
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - operator
           env:

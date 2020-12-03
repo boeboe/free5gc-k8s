@@ -24,8 +24,7 @@ spec:
       containers:
         - name: f5gc-n6dummy
           image: docker.io/centos/tools:latest
-          imagePullPolicy: IfNotPresent
-          # imagePullPolicy: Always
+          imagePullPolicy: Always
           command:
           - /sbin/init
           securityContext:
