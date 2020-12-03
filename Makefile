@@ -65,9 +65,9 @@ build: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-aus
 
 push: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui ## Push all images to dockerhub
 
-deploy: deploy-cnis create-ns deploy-mongodb deploy-n6dummy deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all to k8s
+deploy: create-ns deploy-mongodb deploy-n6dummy deploy-gnbsim deploy-amf deploy-smf deploy-upf deploy-nrf deploy-ausf deploy-nssf deploy-pcf deploy-udm deploy-udr deploy-webui ## Deploy all to k8s
 
-undeploy: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui undeploy-n6dummy undeploy-mongodb delete-ns delete-cnis ## Undeploy all from k8s
+undeploy: undeploy-gnbsim undeploy-amf undeploy-smf undeploy-upf undeploy-nrf undeploy-ausf undeploy-nssf undeploy-pcf undeploy-udm undeploy-udr undeploy-webui undeploy-n6dummy undeploy-mongodb delete-ns ## Undeploy all from k8s
 
 
 ### Base Image ###
@@ -84,14 +84,6 @@ create-ns:
 	kubectl apply -f ${K8S_DEPLOY_DIR}/
 delete-ns:
 	kubectl delete -f ${K8S_DEPLOY_DIR}/ || true
-
-# K8S CNIs: calico and multus
-deploy-cnis:
-	kubectl apply -f ${K8S_CNI_DIR}/calico
-	kubectl apply -f ${K8S_CNI_DIR}/multus
-delete-cnis:
-	kubectl delete -f ${K8S_CNI_DIR}/calico
-	kubectl delete -f ${K8S_CNI_DIR}/multus
 
 
 ### Mongo DBB ###
