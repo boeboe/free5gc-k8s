@@ -329,4 +329,4 @@ kube_kubeadm_apiserver_extra_args:
   api-audiences: api,istio-ca
   service-account-key-file: /etc/kubernetes/ssl/sa.key
   service-account-signing-key-file: /etc/kubernetes/ssl/sa.key
-
+  feature-gates: SCTPSupport=true
