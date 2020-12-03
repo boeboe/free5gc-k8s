@@ -16,6 +16,10 @@ all:
       ansible_host: 10.1.1.8
       ip: 10.1.1.8
       access_ip: 10.1.1.8
+    node4:
+      ansible_host: 10.1.1.9
+      ip: 10.1.1.9
+      access_ip: 10.1.1.9
   children:
     kube-master:
       hosts:
@@ -25,6 +29,7 @@ all:
         node1:
         node2:
         node3:
+        node4:
     etcd:
       hosts:
         master:
