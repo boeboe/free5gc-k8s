@@ -5,8 +5,7 @@ LABEL org.opencontainers.image.source https://github.com/sumichaaan/free5gc-k8s
 
 RUN apt-get update && \
     apt-get install -y \
-        gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev \
-        tree bash net-tools tcpdump strace wget curl httpie vim dnsutils && \
+        gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -23,5 +22,10 @@ WORKDIR /gnbsim
 # Copy executables
 COPY --from=builder /go/src/gnbsim/example/example example
 COPY --from=builder /go/src/gnbsim/example/example.json example.json
+
+RUN apt-get update && \
+    apt-get install -y tree bash net-tools tcpdump strace wget curl httpie vim dnsutils iputils-ping && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["./example"]
