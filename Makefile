@@ -279,3 +279,10 @@ clean:
 	docker rmi ${DOCKER_USER}/${F5GC_UDM_NAME}:${DOCKER_TAG} || true
 	docker rmi ${DOCKER_USER}/${F5GC_UDR_NAME}:${DOCKER_TAG} || true
 	docker rmi ${DOCKER_USER}/${F5GC_WEBUI_NAME}:${DOCKER_TAG} || true
+
+reboot-k8s: ## Reboot Kubernetes Cluster
+	ssh master sudo reboot
+	ssh node1 sudo reboot
+	ssh node2 sudo reboot
+	ssh node3 sudo reboot
+	ssh node4 sudo reboot
