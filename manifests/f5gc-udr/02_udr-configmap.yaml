@@ -39,7 +39,7 @@ data:
         debugLevel: debug
         ReportCaller: true
       UDR:
-        debugLevel: debug
+        debugLevel: trace
         ReportCaller: true
       UDM:
         debugLevel: debug

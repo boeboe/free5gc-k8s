@@ -57,7 +57,7 @@ data:
         debugLevel: debug
         ReportCaller: true
       PCF:
-        debugLevel: debug
+        debugLevel: trace
         ReportCaller: true
       AUSF:
         debugLevel: debug

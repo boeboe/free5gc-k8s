@@ -55,7 +55,7 @@ data:
         debugLevel: info
         ReportCaller: true
       AUSF:
-        debugLevel: info
+        debugLevel: trace
         ReportCaller: true
       N3IWF:
         debugLevel: info

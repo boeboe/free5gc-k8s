@@ -120,7 +120,7 @@ data:
         debugLevel: info
         ReportCaller: true
       SMF:
-        debugLevel: debug
+        debugLevel: trace
         ReportCaller: true
       UDR:
         debugLevel: info

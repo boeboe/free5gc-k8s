@@ -10,9 +10,9 @@ data:
     
     configuration:
       # debugLevel: panic|fatal|error|warn|info|debug|trace
-      debugLevel: info
+      debugLevel: trace
       # ReportCaller: true|false
-      ReportCaller: false
+      ReportCaller: true
     
       pfcp:
         - addr: 172.16.30.30

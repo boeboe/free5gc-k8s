@@ -49,7 +49,7 @@ data:
         debugLevel: info
         ReportCaller: true
       NRF:
-        debugLevel: info
+        debugLevel: trace
         ReportCaller: true
       PCF:
         debugLevel: info
