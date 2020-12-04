@@ -4,17 +4,17 @@ F5GC_GNBSIM_NAME        ?= f5gc-gnbsim
 F5GC_AMF_NAME           ?= f5gc-amf
 F5GC_SMF_NAME           ?= f5gc-smf
 F5GC_UPF_NAME           ?= f5gc-upf
-F5GC_NRF_NAME		 	?= f5gc-nrf
+F5GC_NRF_NAME		 				?= f5gc-nrf
 F5GC_AUSF_NAME          ?= f5gc-ausf
 F5GC_NSSF_NAME          ?= f5gc-nssf
 F5GC_PCF_NAME           ?= f5gc-pcf
 F5GC_UDM_NAME           ?= f5gc-udm
 F5GC_UDR_NAME           ?= f5gc-udr
-F5GC_WEBUI_NAME		 	?= f5gc-webui
+F5GC_WEBUI_NAME		 			?= f5gc-webui
 
 DOCKER_ENV              ?= DOCKER_BUILDKIT=1
 DOCKER_TAG              ?= v3.0.4
-DOCKER_USER       		?= boeboe
+DOCKER_USER       			?= boeboe
 DOCKER_BUILD_ARGS       ?= --rm
 
 BASE_IMAGE_NAME         ?= ${DOCKER_USER}/${F5GC_BASE_NAME}:${DOCKER_TAG}
@@ -30,23 +30,23 @@ UDM_IMAGE_NAME          ?= ${DOCKER_USER}/${F5GC_UDM_NAME}:${DOCKER_TAG}
 UDR_IMAGE_NAME          ?= ${DOCKER_USER}/${F5GC_UDR_NAME}:${DOCKER_TAG}
 WEBUI_IMAGE_NAME        ?= ${DOCKER_USER}/${F5GC_WEBUI_NAME}:${DOCKER_TAG}
 
-K8S_DEPLOY_DIR       	?= ./manifests
+K8S_DEPLOY_DIR					?= ./manifests
 
-GNBSIM_K8S_DEPLOY_DIR   ?= ${K8S_DEPLOY_DIR}/${F5GC_GNBSIM_NAME}
-AMF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_AMF_NAME}
-SMF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_SMF_NAME}
-UPF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_UPF_NAME}
-NRF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_NRF_NAME}
-AUSF_K8S_DEPLOY_DIR     ?= ${K8S_DEPLOY_DIR}/${F5GC_AUSF_NAME}
-NSSF_K8S_DEPLOY_DIR     ?= ${K8S_DEPLOY_DIR}/${F5GC_NSSF_NAME}
-PCF_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_PCF_NAME}
-UDM_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_UDM_NAME}
-UDR_K8S_DEPLOY_DIR      ?= ${K8S_DEPLOY_DIR}/${F5GC_UDR_NAME}
-WEBUI_K8S_DEPLOY_DIR    ?= ${K8S_DEPLOY_DIR}/${F5GC_WEBUI_NAME}
-MONGODB_K8S_DEPLOY_DIR  ?= ${K8S_DEPLOY_DIR}/f5gc-mongodb
-N6DUMMY_K8S_DEPLOY_DIR  ?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy
+GNBSIM_K8S_DEPLOY_DIR   			?= ${K8S_DEPLOY_DIR}/${F5GC_GNBSIM_NAME}
+AMF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_AMF_NAME}
+SMF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_SMF_NAME}
+UPF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_UPF_NAME}
+NRF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_NRF_NAME}
+AUSF_K8S_DEPLOY_DIR     			?= ${K8S_DEPLOY_DIR}/${F5GC_AUSF_NAME}
+NSSF_K8S_DEPLOY_DIR     			?= ${K8S_DEPLOY_DIR}/${F5GC_NSSF_NAME}
+PCF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_PCF_NAME}
+UDM_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_UDM_NAME}
+UDR_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/${F5GC_UDR_NAME}
+WEBUI_K8S_DEPLOY_DIR    			?= ${K8S_DEPLOY_DIR}/${F5GC_WEBUI_NAME}
+MONGODB_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-mongodb
+MONGO_EXPRESS_K8S_DEPLOY_DIR	?= ${K8S_DEPLOY_DIR}/dbg-mongo-express
+N6DUMMY_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy
 
-K8S_CNI_DIR       		?= ./clusters/cni
 
 .PHONY: build-base build-gnbsim build-amf build-smf build-upf build-nrf build-ausf build-nssf build-pcf build-udm build-udr build-webui
 .PHONY: push-base push-gnbsim push-amf push-smf push-upf push-nrf push-ausf push-nssf push-pcf push-udm push-udr push-webui
@@ -89,8 +89,10 @@ delete-ns:
 ### Mongo DBB ###
 deploy-mongodb:
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR}
+	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR}
 undeploy-mongodb:
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
+	kubectl delete -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 
 
 ### N6 Dummy - Between User Plan Function (UPF) and DN (Data Network) ###
