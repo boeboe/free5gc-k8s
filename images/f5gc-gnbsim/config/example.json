@@ -28,8 +28,8 @@
         "PagingDRX" : "v32",
         "RANUENGAPID" : 0,
         "UE": {
-                "imeisv": "0000000100000101",
-                "msin": "0000000001",
+                "imeisv": "208930000000003",
+                "msin": "0000000003",
                 "mcc": 208,
                 "mnc": 93,
                 "RoutingIndicator": 1234,
@@ -62,6 +62,6 @@
                 }
         },
         "GTPuAddr": "192.168.10.10",
-        "GTPuIFname": "net1",
+        "GTPuIFname": "net2",
         "GTPuTEID": 2
 }

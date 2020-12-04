@@ -30,7 +30,7 @@ data:
             "PagingDRX" : "v32",
             "RANUENGAPID" : 0,
             "UE": {
-                    "imeisv": "0000000100000101",
+                    "imeisv": "208930000000003",
                     "msin": "0000000003",
                     "mcc": 208,
                     "mnc": 93,
