@@ -47,8 +47,9 @@ spec:
               add: ["NET_ADMIN", "SYS_TIME"]
           volumeMounts:
             - name: f5gc-gnbsim-config
-              mountPath: /gnbsim/example-sample.json
-              subPath: example-sample.json
+              mountPath: /gnbsim
+            - name: f5gc-gnbsim-script
+              mountPath: /gnbsim
             - mountPath: /dev/net/tun
               name: tun-devdir
           ports:
@@ -78,6 +79,10 @@ spec:
         - name: f5gc-gnbsim-config
           configMap:
             name: f5gc-gnbsim-config
+        - name: f5gc-gnbsim-script
+          configMap:
+            name: f5gc-gnbsim-script
+            defaultMode: 0777
         - name: tun-devdir
           hostPath:
             path: /dev/net/tun

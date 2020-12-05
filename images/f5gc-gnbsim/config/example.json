@@ -1,67 +1,67 @@
 {
-  "GlobalGNBID": {
-    "mcc": 208,
-    "mnc": 93,
-    "gnbid": 1
+  "GlobalGNBID" : {
+    "mcc" : 208,
+    "mnc" : 93,
+    "gnbid" : 1
   },
-  "SupportedTAList": [
+  "SupportedTAList" : [
     {
-      "TAC": "0x000001",
-      "BroadcastPLMNList": [
+      "TAC" : "0x000001",
+      "BroadcastPLMNList" : [
         {
-          "MCC": 208,
-          "MNC": 93,
-          "SliceSupportList": [
+          "MCC" : 208,
+          "MNC" : 93,
+          "SliceSupportList" : [
             {
-              "SST": 1,
-              "SD": "010203"
+              "SST" : 1,
+              "SD" : "010203"
             },
             {
-              "SST": 1,
-              "SD": "112233"
+              "SST" : 1,
+              "SD" : "112233"
             }
           ]
         }
       ]
     }
   ],
-  "PagingDRX": "v32",
-  "RANUENGAPID": 0,
-  "UE": {
-    "imeisv": "208930000000003",
-    "msin": "0000000003",
-    "mcc": 208,
-    "mnc": 93,
-    "RoutingIndicator": 1234,
-    "ProtectionScheme": "null",
-    "AuthParam": {
-      "K": "8baf473f2f8fd09487cccbd7097c6862",
-      "OPc": "8e27b6af0e692e750f32667a3b14605d"
+  "PagingDRX" : "v32",
+  "RANUENGAPID" : 0,
+  "UE" : {
+    "imeisv" : "208930000000003",
+    "msin" : "0000000003",
+    "mcc" : 208,
+    "mnc" : 93,
+    "RoutingIndicator" : 1234,
+    "ProtectionScheme" : "null",
+    "AuthParam" : {
+      "K" : "8baf473f2f8fd09487cccbd7097c6862",
+      "OPc" : "8e27b6af0e692e750f32667a3b14605d"
     },
-    "snssai": {
-      "sst": 1,
-      "sd": "010203"
+    "snssai" : {
+      "sst" : 1,
+      "sd" : "010203"
     },
-    "dnn": "internet",
-    "url": "http://localhost"
+    "dnn" : "internet",
+    "url" : "http://localhost"
   },
-  "ULInfoNR": {
-    "NRCGI": {
-      "PLMN": {
-        "mcc": 208,
-        "mnc": 93
+  "ULInfoNR" : {
+    "NRCGI" : {
+      "PLMN" : {
+        "mcc" : 208,
+        "mnc" : 93
       },
-      "NRCellID": 1
+      "NRCellID" : 1
     },
-    "TAI": {
-      "PLMN": {
-        "mcc": 208,
-        "mnc": 93
+    "TAI" : {
+      "PLMN" : {
+        "mcc" : 208,
+        "mnc" : 93
       },
-      "TAC": "0x000001"
+      "TAC" : "0x000001"
     }
   },
-  "GTPuAddr": "192.168.10.10",
-  "GTPuIFname": "net2",
-  "GTPuTEID": 2
+  "GTPuAddr" : "192.168.10.10",
+  "GTPuIFname" : "net2",
+  "GTPuTEID" : 2
 }
