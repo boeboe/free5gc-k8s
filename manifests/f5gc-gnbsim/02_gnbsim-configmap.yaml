@@ -83,5 +83,6 @@ data:
 
     while true ; do
       ./example -ip f5gc-amf
+      sleep 5
       ip link delete gtp-gnb
     done
