@@ -1,6 +1,5 @@
 # Makefile
 
-NGINX_PPA=ppa:nginx/stable
 #NGINX_PPA=ppa:nginx/development
 NGINX_CERTS_DIR=/etc/ssl/nginx
 
@@ -13,7 +12,8 @@ help: ## This help
 
 
 install:  ## Install Nginx OSS
-	sudo add-apt-repository -y ${NGINX_PPA}
+	printf "deb https://nginx.org/packages/ubuntu/ `lsb_release -cs` nginx\n" | sudo tee -a /etc/apt/sources.list.d/nginx.list
+	printf "deb-src https://nginx.org/packages/ubuntu/ `lsb_release -cs` nginx\n" | sudo tee -a /etc/apt/sources.list.d/nginx.list
 	sudo apt-get update -y
 	sudo apt-get install -y nginx
 	sudo mkdir -p ${NGINX_CERTS_DIR}
