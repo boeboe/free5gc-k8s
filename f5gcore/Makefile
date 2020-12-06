@@ -12,10 +12,19 @@ F5GC_UDM_NAME           ?= f5gc-udm
 F5GC_UDR_NAME           ?= f5gc-udr
 F5GC_WEBUI_NAME		 			?= f5gc-webui
 
-DOCKER_ENV              ?= DOCKER_BUILDKIT=1
-DOCKER_TAG              ?= v3.0.4
-DOCKER_USER       			?= boeboe
-DOCKER_BUILD_ARGS       ?= --rm
+# With or without debug tools
+ifeq ($(DEBUG), true)
+DOCKER_ENV          ?= DOCKER_BUILDKIT=1
+DOCKER_TAG          ?= v3.0.4-dbg
+DOCKER_USER       	?= boeboe
+DEBUG_TOOL_LIST     ?= vim strace net-tools curl netcat-openbsd bash tree tcpdump wget httpie bind-tools iproute2
+DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=true --build-arg DEBUG_TOOL_LIST="${DEBUG_TOOL_LIST}"
+else
+DOCKER_ENV          ?= DOCKER_BUILDKIT=1
+DOCKER_TAG          ?= v3.0.4
+DOCKER_USER       	?= boeboe
+DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=false
+endif
 
 BASE_IMAGE_NAME         ?= ${DOCKER_USER}/${F5GC_BASE_NAME}:${DOCKER_TAG}
 GNBSIM_IMAGE_NAME       ?= ${DOCKER_USER}/${F5GC_GNBSIM_NAME}:${DOCKER_TAG}

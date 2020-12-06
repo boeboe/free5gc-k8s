@@ -7,9 +7,10 @@ LABEL org.opencontainers.image.source https://github.com/sumichaaan/free5gc-k8s
 
 ENV F5GC_MODULE smf
 ARG DEBUG_TOOLS
+ARG DEBUG_TOOL_LIST
 
 # Install debug tools ~ 100MB (if DEBUG_TOOLS is set to true)
-RUN if [ "$DEBUG_TOOLS" = "true" ] ; then apk add -U vim strace net-tools curl netcat-openbsd bash tree tcpdump wget httpie bind-tools ; fi
+RUN if [ "$DEBUG_TOOLS" = "true" ] ; then apk add -U ${DEBUG_TOOL_LIST} ; fi
 
 # Set working dir
 WORKDIR /free5gc

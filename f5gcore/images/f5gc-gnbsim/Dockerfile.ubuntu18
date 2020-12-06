@@ -4,8 +4,7 @@ LABEL maintainer="Yoshifumi Sumida <yoshifumi.sumida@gmail.com>"
 LABEL org.opencontainers.image.source https://github.com/sumichaaan/free5gc-k8s
 
 RUN apt-get update && \
-    apt-get install -y \
-        gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev && \
+    apt-get install -y gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -23,9 +22,13 @@ WORKDIR /gnbsim
 COPY --from=builder /go/src/gnbsim/example/example example
 # COPY config/example.json example.json
 
-RUN apt-get update && \
-    apt-get install -y tree bash net-tools tcpdump strace wget curl httpie vim dnsutils iputils-ping iproute2 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+ARG DEBUG_TOOLS
+ENV DEBUG_TOOL_LIST "vim strace net-tools curl netcat bash tree tcpdump wget httpie dnsutils iproute2 iputils-ping"
+
+RUN apt-get update -y && apt-get install -y iproute2 
+
+# Install debug tools ~ 100MB (if DEBUG_TOOLS is set to true)
+RUN if [ "$DEBUG_TOOLS" = "true" ] ; then apt-get update -y && apt-get install -y ${DEBUG_TOOL_LIST} ; fi
+
 
 ENTRYPOINT ["./example"]

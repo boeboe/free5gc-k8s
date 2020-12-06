@@ -8,13 +8,14 @@ LABEL org.opencontainers.image.source https://github.com/sumichaaan/free5gc-k8s
 ENV F5GC_MODULE free5gc-upfd
 ENV DEBIAN_FRONTEND noninteractive
 ARG DEBUG_TOOLS
+ENV DEBUG_TOOL_LIST "vim strace net-tools curl netcat bash tree tcpdump wget httpie dnsutils iproute2 iputils-ping"
 
 # Install debug tools ~ 100MB (if DEBUG_TOOLS is set to true)
-RUN if [ "$DEBUG_TOOLS" = "true" ] ; then apt-get update && apt-get install -y vim strace net-tools iputils-ping curl netcat ; fi
+RUN if [ "$DEBUG_TOOLS" = "true" ] ; then apt-get update -y && apt-get install -y ${DEBUG_TOOL_LIST} ; fi
 
 # Install UPF dependencies
 RUN apt-get update \
-    && apt-get install -y libmnl0 libyaml-0-2 iproute2 tree bash net-tools tcpdump strace wget curl httpie vim dnsutils \
+    && apt-get install -y libmnl0 libyaml-0-2 iproute2 \
     && apt-get clean
 
 # Set working dir
