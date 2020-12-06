@@ -23,8 +23,7 @@ deploy:  ## Deploy EFK stack
 		--set clientReplicas=1,masterReplicas=1,dataReplicas=1 \
 		--namespace ${ES_LOGGING_NAMESPACE}
 	sleep 120
-	helm install stable/fluent-bit --wait \
-		--name=fluent-bit \
+	helm install fluent-bit stable/fluent-bit --wait \
 		--set metrics.enabled=true \
 		--set backend.type=es \
 		--set backend.es.time_key='@ts' \
