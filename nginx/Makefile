@@ -23,7 +23,7 @@ install:  ## Install Nginx OSS
 
 
 config-update:  ## Update Nginx config
-	sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.back || true
+	sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.back | true
 	sudo cp ./nginx.conf /etc/nginx/nginx.conf
 	sudo rm -f /etc/nginx/conf.d/*
 	sudo cp -R conf.d/* /etc/nginx/conf.d/
