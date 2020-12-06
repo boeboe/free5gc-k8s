@@ -60,6 +60,10 @@ undeploy: ## Undeployment F5GCore Compoments
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 
+install-k8s: ## Install k8s using kubespray
+	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
+	cd kubespray && cp /home/ubuntu/
+
 reboot-k8s: ## Reboot Kubernetes Cluster
 	ssh master sudo reboot || true
 	ssh node1 sudo reboot || true

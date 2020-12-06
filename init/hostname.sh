@@ -8,7 +8,7 @@ case ${IP_ADDRESS} in
     sudo sh -c "echo jumphost > /etc/hostname" ; sudo init 6
     ;;
   "10.1.1.5")
-    sudo sh -c "echo master1 > /etc/hostname" ; sudo init 6
+    sudo sh -c "echo master > /etc/hostname" ; sudo init 6
     ;;
   "10.1.1.6")
     sudo sh -c "echo node1 > /etc/hostname" ; sudo init 6
