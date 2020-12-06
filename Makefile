@@ -1,5 +1,9 @@
 # Makefile
 
+GIT_REPO=https://github.com/boeboe/free5gc-k8s
+HOME_DIR=/home/ubuntu
+REPO_DIR=${HOME_DIR}/free5gc-k8s
+
 K8S_DEPLOY_DIR								?= ./f5gcore/manifests
 
 GNBSIM_K8S_DEPLOY_DIR   			?= ${K8S_DEPLOY_DIR}/f5gc-gnbsim
@@ -64,9 +68,25 @@ install-k8s: ## Install k8s using kubespray
 	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
 	cd kubespray && cp /home/ubuntu/
 
-reboot-k8s: ## Reboot Kubernetes Cluster
+reboot-k8s: ## Reboot k8s cluster hosts
 	ssh master sudo reboot || true
 	ssh node1 sudo reboot || true
 	ssh node2 sudo reboot || true
 	ssh node3 sudo reboot || true
 	ssh node4 sudo reboot || true
+
+git-clone-all: ## Clone all git repos
+	ssh jumphost 		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh master  		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh node1   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh node2   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh node3   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh node4   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+
+git-pull-all: ## Pull all git repos
+	ssh jumphost 		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh master  		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh node1   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh node2   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh node3   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh node4   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
