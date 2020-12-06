@@ -13,20 +13,17 @@ ES_LOGGING_NAMESPACE=logging
 
 deploy:  ## Deploy EFK stack
 	helm repo add es-operator ${HELM_REPO}
-	helm install es-operator/elasticsearch-operator --wait \
-		--name elasticsearch-operator \
+	helm install elasticsearch-operator es-operator/elasticsearch-operator --wait \
 		--set rbac.enabled=True \
 		--namespace ${ES_OPERATOR_NAMESPACE}
 	sleep 20
-	helm install es-operator/elasticsearch --wait \
-		--name=elasticsearch \
+	helm install elasticsearch es-operator/elasticsearch --wait \
 		--set kibana.enabled=true \
 		--set cerebro.enabled=true \
 		--set clientReplicas=1,masterReplicas=1,dataReplicas=1 \
 		--namespace ${ES_LOGGING_NAMESPACE}
 	sleep 120
-	helm install stable/fluent-bit --wait \
-		--name=fluent-bit \
+	helm install fluent-bit stable/fluent-bit --wait \
 		--set metrics.enabled=true \
 		--set backend.type=es \
 		--set backend.es.time_key='@ts' \
