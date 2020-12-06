@@ -13,7 +13,7 @@ help: ## This help
 
 
 install:  ## Install Nginx OSS
-	sudo add-apt-repository ${NGINX_PPA}
+	sudo add-apt-repository -y ${NGINX_PPA}
 	sudo apt-get update -y
 	sudo apt-get install -y nginx
 	sudo mkdir -p ${NGINX_CERTS_DIR}
