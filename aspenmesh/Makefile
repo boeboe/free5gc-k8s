@@ -6,6 +6,7 @@ ASPEN_VERSION=1.6.12-am3
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-${ASPEN_VERSION}/manifests/charts
 # CHART_DIR=./aspenmesh-${ASPEN_VERSION}/install/kubernetes/helm
+ISTIO_VERSION=1.6.12
 
 .PHONY: help
 
@@ -15,7 +16,7 @@ help: ## This help
 .DEFAULT_GOAL := help
 
 
-install: ## Install aspenmesh
+install: istioctl ## Install aspenmesh
 	kubectl create ns ${ASPEN_NAMESPACE} || true
 	helm install istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} --wait || true
 	helm install istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} --wait || true
@@ -42,3 +43,7 @@ uninstall: ## Uninstall aspenmesh
 	helm uninstall istiod --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istio-base --namespace ${ASPEN_NAMESPACE} || true
 	kubectl delete ns ${ASPEN_NAMESPACE} || true
+
+istioctl: ## Install istioctl
+	curl -sL https://istio.io/downloadIstioctl | ISTIO_VERSION=${ISTIO_VERSION} sh - && \
+	sudo cp ~/.istioctl/bin/istioctl /usr/local/bin
