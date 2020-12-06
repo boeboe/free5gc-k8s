@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "elasticsearch-operator.name" . }}
+      name: {{ template "elasticsearch-operator.name" . }}
   template:
     metadata:
       labels:
