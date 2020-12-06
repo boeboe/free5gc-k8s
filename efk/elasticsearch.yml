@@ -14,13 +14,15 @@
 #
 # Use a descriptive name for your cluster:
 #
-cluster.name: monitor-cluster
+cluster.name: elastic-cluster
 #
 # ------------------------------------ Node ------------------------------------
 #
 # Use a descriptive name for the node:
 #
-#node.name: node-1
+node.name: elastic
+node.master: true
+node.data: true
 #
 # Add custom attributes to the node:
 #
