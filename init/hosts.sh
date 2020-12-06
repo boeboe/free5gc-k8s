@@ -15,6 +15,7 @@ END
 sudo tee -a /etc/hosts << END
 
 # Host aliases for extra services
-10.1.1.4    elastic
+10.1.1.4    elasticsearch
+10.1.1.4    kibana
 
 END
