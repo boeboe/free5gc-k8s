@@ -5,6 +5,6 @@ backend:
   type: es
   es:
     time_key: '@ts'
-    host: elasticsearch-elasticsearch-cluster
+    host: elasticsearch
     tls: "off"
     tls_verify: "off"

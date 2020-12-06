@@ -1,9 +1,0 @@
-kibana:
-  enabled: true
-
-cerebro:
-  enabled: true
-
-clientReplicas: 1
-masterReplicas: 1
-dataReplicas: 1
