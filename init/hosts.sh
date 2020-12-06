@@ -11,3 +11,10 @@ sudo tee -a /etc/hosts << END
 10.1.1.9    node4
 
 END
+
+sudo tee -a /etc/hosts << END
+
+# Host aliases for extra services
+10.1.1.4    elastic
+
+END
