@@ -39,16 +39,18 @@ install-cerebro:  ## Install elasticsearch web admin tool cerebro
 		--privileged \
 		lmenezes/cerebro:latest
 
-uninstall-cerebro:  ## Unistall elasticsearch web admin tool cerebro
+remove-cerebro:  ## Unistall elasticsearch web admin tool cerebro
 	sudo docker kill cerebro
 	sudo docker rm cerebro
 	sudo docker rmi lmenezes/cerebro:latest
 
-deploy-fluentbit:  ## Deploy EFK stack
+install-fluentbit:  ## Deploy fluentbit
 	kubectl apply -f 00_namespace.yaml
 	helm install fluent-bit ${CHART_DIR}/fluent-bit --values ${FLUENT_BIT_VALUES}	--namespace=${LOGGING_NAMESPACE} --wait
 
+update-fluentbit:  ## Update fluentbit
+	helm update fluent-bit ${CHART_DIR}/fluent-bit --values ${FLUENT_BIT_VALUES}	--namespace=${LOGGING_NAMESPACE} --wait
 
-undeploy-fluentbit:  ## Undeploy EFK stack
+remove-fluentbit:  ## Remove fluentbit
 	helm uninstall fluent-bit --namespace=${LOGGING_NAMESPACE} || true
 	kubectl delete -f 00_namespace.yaml || true
