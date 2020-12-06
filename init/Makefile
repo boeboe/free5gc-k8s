@@ -20,3 +20,7 @@ init: ## Prepare host
 
 dist-upgrade: ## Upgrade ubuntu version
 	sudo do-release-upgrade -d 
+
+gtp5gc: ## Install 5G compatible GTP kernel module
+	cd /tmp && https://github.com/PrinzOwO/gtp5g && \
+	cd gtp5g && make clean && make && sudo make install 
