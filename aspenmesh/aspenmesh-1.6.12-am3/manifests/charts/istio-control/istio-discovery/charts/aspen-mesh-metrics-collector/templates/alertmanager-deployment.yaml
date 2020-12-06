@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspen-mesh-alertmanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-altertmanager
+    chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: aspen-mesh-alertmanager
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: aspen-mesh-alertmanager
+        chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: aspen-mesh-metrics-collector
+{{- if .Values.global.priorityClassName }}
+      priorityClassName: "{{ .Values.global.priorityClassName }}"
+{{- end }}
+      securityContext:
+        fsGroup: 65534
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: alertmanager
+          image: "{{ .Values.global.hub }}:{{ .Values.alertmanagerImage }}"
+          imagePullPolicy: "{{ .Values.alertmanager.image.pullPolicy }}"
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          args:
+            - --config.file=/etc/config/{{ .Values.alertmanager.configFileName }}
+            - --storage.path={{ .Values.alertmanager.persistentVolume.mountPath }}
+            - --cluster.advertise-address=$(POD_IP):6783
+          {{- if .Values.alertmanager.baseURL }}
+            - --web.external-url={{ .Values.alertmanager.baseURL }}
+          {{- end }}
+          ports:
+            - containerPort: 9093
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.alertmanager.prefixURL }}/-/ready
+              port: 9093
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+{{ toYaml .Values.alertmanager.resources | indent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: "{{ .Values.alertmanager.persistentVolume.mountPath }}"
+              subPath: "{{ .Values.alertmanager.persistentVolume.subPath }}"
+        {{- if .Values.configmapReload.alertmanager.enabled }}
+        - name: alertmanager-cm-reload
+          image: "{{ .Values.global.hub }}:{{ .Values.configmapReloadImage }}"
+          imagePullPolicy: "{{ .Values.configmapReload.alertmanager.image.pullPolicy }}"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://127.0.0.1:9093{{ .Values.alertmanager.prefixURL }}/-/reload
+          resources:
+{{ toYaml .Values.configmapReload.alertmanager.resources | indent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+        {{- end }}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: aspen-mesh-alertmanager
+      - name: storage-volume
+      {{- if .Values.alertmanager.persistentVolume.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.alertmanager.persistentVolume.existingClaim }}{{ .Values.alertmanager.persistentVolume.existingClaim }}{{- else }}"aspen-mesh-alertmanager"{{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      affinity:
+      {{- include "nodeaffinity" . | indent 6 }}
+      {{- include "podAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

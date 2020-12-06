@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: istio-init-crd-mixer-{{ .Values.global.tag | printf "%v" | trunc 32 | trimSuffix "-" | lower }}
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: istio-init-service-account
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+      - name: istio-init-crd-mixer
+        image: "{{ .Values.global.hub }}:kubectl-{{.Values.global.tag }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+{{- if .Values.job.resources }}
+        resources:
+{{ toYaml .Values.job.resources | indent 10 }}
+{{- end }}
+        volumeMounts:
+        - name: crd-mixer
+          mountPath: /etc/istio/crd-mixer
+          readOnly: true
+        command: ["kubectl",  "apply", "-f", "/etc/istio/crd-mixer/crd-mixer.yaml"]
+      volumes:
+      - name: crd-mixer
+        configMap:
+          name: istio-crd-mixer
+      restartPolicy: OnFailure

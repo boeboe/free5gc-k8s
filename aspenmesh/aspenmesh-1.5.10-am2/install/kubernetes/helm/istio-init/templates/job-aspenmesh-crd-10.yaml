@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.global.tag | printf "istio-init-aspenmesh-crd-10-%v" | trunc 63 | lower }}
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: istio-init-service-account
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+      - name: istio-init-aspenmesh-crd-10
+        image: "{{ .Values.global.hub }}:kubectl-{{.Values.global.tag }}"
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+{{- if .Values.job.resources }}
+        resources:
+{{ toYaml .Values.job.resources | indent 10 }}
+{{- end }}
+{{- if (semverCompare ">=1.15-0" .Capabilities.KubeVersion.GitVersion) }}
+        volumeMounts:
+        - name: aspenmesh-crd-10
+          mountPath: /etc/istio/aspenmesh-crd-10
+          readOnly: true
+        command: ["kubectl", "apply", "--validate=false", "-f", "/etc/istio/aspenmesh-crd-10/aspenmesh-crd-10.yaml"]
+      volumes:
+      - name: aspenmesh-crd-10
+        configMap:
+          name: aspenmesh-crd-10
+      restartPolicy: OnFailure
+{{- else }}
+        volumeMounts:
+        - name: aspenmesh-crd-10-legacy
+          mountPath: /etc/istio/aspenmesh-crd-10-legacy
+          readOnly: true
+        command: ["kubectl", "apply", "--validate=false", "-f", "/etc/istio/aspenmesh-crd-10-legacy/aspenmesh-crd-10-legacy.yaml"]
+      volumes:
+      - name: aspenmesh-crd-10-legacy
+        configMap:
+          name: aspenmesh-crd-10-legacy
+      restartPolicy: OnFailure
+{{- end }}

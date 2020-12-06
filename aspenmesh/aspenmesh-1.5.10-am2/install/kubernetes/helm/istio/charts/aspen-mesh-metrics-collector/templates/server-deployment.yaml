@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspen-mesh-metrics-collector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-metrics-collector
+    chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.server.replicaCount }}
+  selector:
+    matchLabels:
+      app: aspen-mesh-metrics-collector
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: aspen-mesh-metrics-collector
+        chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: aspen-mesh-metrics-collector
+{{- if .Values.global.priorityClassName }}
+      priorityClassName: "{{ .Values.global.priorityClassName }}"
+{{- end }}
+      securityContext:
+        fsGroup: 65534
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: configmap-reload
+          image: "{{ .Values.global.hub }}:{{ .Values.configmapReloadImage }}"
+          imagePullPolicy: "{{ .Values.configmapReload.server.image.pullPolicy }}"
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://127.0.0.1:9090{{ .Values.prefixURL }}/-/reload
+          resources:
+{{ toYaml .Values.configmapReload.server.resources | indent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+        - name: metrics-collector
+          image: {{ template "aspen-mesh-metrics-collector.serviceImagePath" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          args:
+            - --config.file=/etc/config/prometheus.yml
+            - --storage.tsdb.path=/metrics-collector/tsdb
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.enable-lifecycle
+          resources:
+{{- if .Values.server.serviceResources }}
+{{ toYaml .Values.server.serviceResources | indent 12 }}
+{{- else }}
+{{ toYaml .Values.global.defaultResources | indent 12 }}
+{{- end }}
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+          - name: datastore
+            mountPath: /metrics-collector/tsdb
+      volumes:
+      - name: config-volume
+        configMap:
+          name: aspen-mesh-metrics-collector
+      - name: datastore
+{{- if .Values.server.persistentVolume.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ if .Values.server.persistentVolume.existingClaim }}{{ .Values.server.persistentVolume.existingClaim }}{{- else }}"aspen-mesh-metrics-collector"{{- end }}
+{{- else }}
+        emptyDir:
+        {{- if .Values.server.emptyDir.sizeLimit }}
+          sizeLimit: {{ .Values.server.emptyDir.sizeLimit }}
+        {{- else }}
+          {}
+        {{- end }}
+{{- end }}
+      affinity:
+      {{- include "nodeaffinity" . | indent 6 }}
+      {{- include "podAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

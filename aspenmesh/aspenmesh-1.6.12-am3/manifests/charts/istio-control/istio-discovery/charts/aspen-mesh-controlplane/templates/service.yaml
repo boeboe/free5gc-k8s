@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspen-mesh-controlplane
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-controlplane
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+{{- if eq .Values.userAuth.type "oauthOpenshift" }}
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: aspen-mesh-controlplane-tls
+{{- end }}
+spec:
+  ports:
+    - port: 19001
+      name: http
+      targetPort: {{ template "aspen-mesh-controlplane.httpTargetPort" . }}
+    - port: 19000
+      name: grpc
+      targetPort: grpc
+    - port: 9105
+      name: http-admin
+      targetPort: http-admin
+    - port: 19005
+      name: http-event-manager
+      targetPort: http-am
+    - port: {{ template "aspen-mesh-controlplane.validationPort" .}}
+      name: https-validation
+      targetPort: https-val
+  selector:
+    app: aspen-mesh-controlplane

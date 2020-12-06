@@ -1,0 +1,36 @@
+image: # Override with appropriate image and tag.
+
+modelruntimeImage: # Override with appropriate image and tag.
+
+replicaCount: 2
+
+clusterId: default
+
+userAuth:
+  type: jwt
+  jwt:
+    jwks: # Must provide a valid JWKs endpoint.
+    redirectUrl: # Must provide an unauthenticated redirect URL.
+#      claims:
+  oauthOpenshift:
+    host:
+
+prometheusUrl:
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "128Mi"
+    cpu: "100m"
+modelRuntimeResources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "128Mi"
+    cpu: "100m"
+
+topNMetrics:
+  enabled: false

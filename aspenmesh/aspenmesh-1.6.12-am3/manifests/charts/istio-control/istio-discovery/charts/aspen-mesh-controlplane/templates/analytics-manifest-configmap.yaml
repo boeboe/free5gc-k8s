@@ -1,0 +1,412 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aspen-mesh-analytics-manifest
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-controlplane
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+data:
+  features.yaml: |-
+    ---
+    metadata:
+      name: admin
+      kind: Admin
+    spec:
+      health:
+        modelName: health_score_v3
+        presentationName: health_score_v3
+    ---
+    metadata:
+      name: health_score_v1
+      kind: Presentation
+    spec:
+      modelReference:
+        id: health_score_v1
+        outputReferences:
+        - name: health-score-result
+          transformations:
+          - name: no-transformation
+            config:
+            - "@type": "api.private.analytics.v1.manifest.transformations/transformations.Noop"
+    ---
+    metadata:
+      name: health_score_v3
+      kind: Presentation
+    spec:
+      modelReference:
+        id: health_score_v3
+        outputReferences:
+          - name: health-score-result
+            transformations:
+              - name: no-transformation
+                config:
+                  - "@type": "api.private.analytics.v1.manifest.transformations/transformations.Noop"
+    ---
+    metadata:
+      name: health_score_v1
+      kind: Model
+    spec:
+      id: health_score_v1
+      inputs:
+        dataReferences:
+        - name: prometheus_health_score_info_namespaces
+        - name: prometheus_health_score_info_workloads
+        - name: prometheus_health_score_info_services
+      configuration:
+        parameters:
+          weight4xx: "0.2"
+          weight5xx: "0.4"
+          weightLatency: "0.4"
+          greenUpperThreshold: "1.0"
+          greenToYellowThreshold: "0.9"
+          yellowToRedThreshold: "0.75"
+          redLowerThreshold: "0.0"
+          latencyMaxRate: "1.0"
+          latencyRateThreshold: "0.5"
+          latencyMinRate: "0.0"
+          yellow4xxMax: "1.0"
+          greenToYellowThreshold4xx: "0.1"
+          green4xxMin: "0.0"
+          red5xxMax: "1.0"
+          yellowToRedThreshold5xx: "0.05"
+          greenToYellowThreshold5xx: "0.03"
+          green5xxMin: "0.0"
+          lowerLatencyThreshold: "331"
+          upperLatencyThreshold: "692"
+          maxLatency: "+Inf"
+        runtimeParameters:
+          type: GenericRuntimeParameters
+      outputs:
+      - name: health-score-result-cluster
+        prometheus:
+          vector:
+            labels:
+      - name: health-score-result-service
+        prometheus:
+          vector:
+            labels:
+              - namespace
+              - service
+      - name: health-score-result-namespace
+        prometheus:
+          vector:
+            labels:
+            - namespace
+      - name: health-score-result-workload
+        prometheus:
+          vector:
+            labels:
+            - namespace
+            - workload
+    ---
+    metadata:
+      name: health_score_v2
+      kind: Model
+    spec:
+      id: health_score_v2
+      inputs:
+        dataReferences:
+        - name: prometheus_health_score_info_namespaces
+        - name: prometheus_health_score_info_workloads
+        - name: prometheus_health_score_info_services
+      configuration:
+        parameters:
+          weight4xx: "0.85"
+          weight5xx: "100.0"
+          weightLatency: "1.5"
+          target4xx: "0.00"
+          target5xx: "0.00"
+          targetLatency: "0.650"
+        runtimeParameters:
+          type: GenericRuntimeParameters
+      outputs:
+      - name: health-score-result-cluster
+        prometheus:
+          vector:
+            labels:
+      - name: health-score-result-service
+        prometheus:
+          vector:
+            labels:
+              - namespace
+              - service
+      - name: health-score-result-namespace
+        prometheus:
+          vector:
+            labels:
+            - namespace
+      - name: health-score-result-workload
+        prometheus:
+          vector:
+            labels:
+            - namespace
+            - workload
+    ---
+    metadata:
+      name: health_score_v3
+      kind: Model
+    spec:
+      id: health_score_v3
+      inputs:
+        dataReferences:
+        - name: prometheus_health_score_info_workloads
+      configuration:
+        parameters:
+        runtimeParameters:
+          type: HealthScoreV3RuntimeParameters
+      outputs:
+      - name: health-score-result-workloads
+        prometheus:
+          vector:
+            labels:
+      - name: health-score-result-aggregations
+        prometheus:
+          vector:
+            labels:
+    ---
+    metadata:
+      name: top_n_metrics_v1
+      kind: Model
+    spec:
+      id: top_n_metrics_v1
+      inputs:
+        dataReferences:
+          - name: prometheus_top_n_time_series_candidates
+          - name: prometheus_top_n_time_series_alerted_entity
+      configuration:
+        parameters:
+          weightMeanScore: "-0.00189"
+          weightActivityScore: "-2.65616"
+          weightChangePointScore: "-0.04106"
+          weightAbsoluteCorrelationScore: "4.43119"
+          weightDistributionSimilarityScore: "-0.01697"
+          modelConstant: "-3.60005"
+          minLocalCorrelationWeight: "1"
+        runtimeParameters:
+          type: TopNMetricsRuntimeParameters
+      outputs:
+      - name: ranked-metric-queries
+    ---
+    metadata:
+      name: prometheus_health_score_info_workloads
+      kind: Data
+    spec:
+      sources:
+      - prometheus:
+          queries:
+          - name: latencies
+            queryReference:
+              name: latencies
+              parameters:
+                GROUP: "destination_workload_namespace,destination_workload,le"
+          - name: request-counts
+            queryReference:
+              name: request-counts
+              parameters:
+                GROUP: "destination_workload_namespace,destination_workload,response_code,connection_security_policy"
+    ---
+    metadata:
+      name: prometheus_health_score_info_namespaces
+      kind: Data
+    spec:
+      sources:
+        - prometheus:
+            queries:
+              - name: latencies
+                queryReference:
+                  name: latencies
+                  parameters:
+                    GROUP: "destination_workload_namespace,le"
+              - name: request-counts
+                queryReference:
+                  name: request-counts
+                  parameters:
+                    GROUP: "destination_workload_namespace,response_code,connection_security_policy"
+    ---
+    metadata:
+      name: prometheus_health_score_info_services
+      kind: Data
+    spec:
+      sources:
+        - prometheus:
+            queries:
+              - name: latencies
+                queryReference:
+                  name: latencies
+                  parameters:
+                    GROUP: "destination_service_namespace,destination_service_name,le"
+              - name: request-counts
+                queryReference:
+                  name: request-counts
+                  parameters:
+                    GROUP: "destination_service_namespace,destination_service_name,response_code,connection_security_policy"
+    ---
+    metadata:
+      name: prometheus_top_n_time_series_candidates
+      kind: Data
+    spec:
+      sources:
+        - prometheus:
+            queries:
+              - name: health-score-ts
+                queryReference:
+                  name: health-score-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+              - name: request-size-ts
+                queryReference:
+                  name: request-size-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+              - name: response-size-ts
+                queryReference:
+                  name: response-size-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+              - name: p90-latency-ts
+                queryReference:
+                  name: p90-latency-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload,le"
+              - name: request-rate-ts
+                queryReference:
+                  name: request-rate-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+              - name: success-rate-ts
+                queryReference:
+                  name: success-rate-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+    ---
+    metadata:
+      name: prometheus_top_n_time_series_alerted_entity
+      kind: Data
+    spec:
+      sources:
+        - prometheus:
+            queries:
+              - name: alerted-health-score-ts
+                queryReference:
+                  name: alerted-health-score-ts
+                  parameters:
+                    GROUP: "destination_workload_namespace,destination_workload"
+    ---
+    metadata:
+      name: latencies
+      kind: PrometheusQuery
+    spec:
+      query:
+        queryString: sum(increase(istio_request_duration_milliseconds_bucket{LABELS}[STRIDE]))by(GROUP)
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 300s
+          GROUP: ""
+    ---
+    metadata:
+      name: request-counts
+      kind: PrometheusQuery
+    spec:
+      query:
+        queryString: sum(increase(istio_requests_total{LABELS}[STRIDE]))by(GROUP)
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 300s
+          GROUP: ""
+    ---
+    metadata:
+      name: health-score-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: bottomk(N_METRICS, (avg by (GROUP) (aspenmesh_application_health_score)))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          N_METRICS: "20"
+          GROUP: ""
+    ---
+    metadata:
+      name: alerted-health-score-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: (avg by (GROUP) (aspenmesh_application_health_score{LABELS}))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: ""
+          GROUP: ""
+    ---
+    metadata:
+      name: request-size-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: topk(N_METRICS, (sum by (GROUP) (rate(istio_request_bytes_sum{LABELS}[STRIDE])) / sum by (GROUP) (rate(istio_request_bytes_count{LABELS}[STRIDE]))))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 60s
+          N_METRICS: "20"
+          GROUP: ""
+    ---
+    metadata:
+      name: response-size-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: topk(N_METRICS, (sum by (GROUP) (rate(istio_response_bytes_sum{LABELS}[STRIDE])) / sum by (GROUP) (rate(istio_response_bytes_count{LABELS}[STRIDE]))))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 60s
+          N_METRICS: "20"
+          GROUP: ""
+    ---
+    metadata:
+      name: p90-latency-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: topk(N_METRICS, histogram_quantile(0.9, sum(rate(istio_request_duration_milliseconds_bucket{LABELS}[STRIDE])) by (GROUP)))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 60s
+          N_METRICS: "20"
+          GROUP: ""
+    ---
+    metadata:
+      name: request-rate-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: topk(N_METRICS, (sum by (GROUP) (rate(istio_requests_total{LABELS}[STRIDE]))))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: reporter="destination",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 60s
+          N_METRICS: "20"
+          GROUP: ""
+    ---
+    metadata:
+      name: success-rate-ts
+      kind: PrometheusQuery
+    spec:
+      queryRange:
+        queryString: bottomk(N_METRICS, (sum by (GROUP) (increase(istio_requests_total{LABELS}[STRIDE])) / sum by (GROUP) (increase(istio_requests_total{reporter="destination"}[STRIDE]))))
+        intervalSeconds: 3600
+        step: 60s
+        parameters:
+          LABELS: reporter="destination",response_code=~"2..",destination_workload_namespace!="istio-system",destination_workload_namespace!~"kube-.*",destination_workload_namespace!~"openshift.*"
+          STRIDE: 60s
+          N_METRICS: "20"
+          GROUP: ""

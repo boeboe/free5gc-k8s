@@ -1,0 +1,61 @@
+dependencies:
+  - name: sidecarInjectorWebhook
+    version: 1.5.10-am2
+    condition: sidecarInjectorWebhook.enabled
+  - name: security
+    version: 1.5.10-am2
+    condition: security.enabled
+  - name: gateways
+    version: 1.5.10-am2
+    condition: gateways.enabled
+  - name: mixer
+    version: 1.5.10-am2
+    condition: or mixer.policy.enabled mixer.telemetry.enabled
+  - name: nodeagent
+    version: 1.5.10-am2
+    condition: nodeagent.enabled
+  - name: pilot
+    version: 1.5.10-am2
+    condition: pilot.enabled
+  - name: grafana
+    version: 1.5.10-am2
+    condition: grafana.enabled
+  - name: prometheus
+    version: 1.5.10-am2
+    condition: prometheus.enabled
+  - name: tracing
+    version: 1.5.10-am2
+    condition: tracing.enabled
+  - name: galley
+    version: 1.5.10-am2
+    condition: galley.enabled
+  - name: istiocoredns
+    version: 1.5.10-am2
+    condition: istiocoredns.enabled
+  - name: aspen-mesh-controlplane
+    version: 1.5.10-am2
+    condition: aspen-mesh-controlplane.enabled
+  - name: aspen-mesh-dashboard
+    version: 1.5.10-am2
+    condition: aspen-mesh-dashboard.enabled
+  - name: aspen-mesh-secure-ingress
+    version: 1.5.10-am2
+    condition: aspen-mesh-secure-ingress.enabled
+  - name: traffic-claim-enforcer
+    version: 1.0.0
+    condition: traffic-claim-enforcer.enabled
+  - name: aspen-mesh-metrics-collector
+    version: 1.5.10-am2
+    condition: aspen-mesh-metrics-collector.enabled
+  - name: jaeger
+    version: 0.19.2
+    condition: jaeger.enabled
+  - name: cert-manager
+    version: v0.12.0
+    condition: cert-manager.enabled
+  - name: external-dns
+    version: 2.16.1
+    condition: external-dns.enabled
+  - name: cassandra
+    version: 0.13.4
+    condition: cassandra.enabled

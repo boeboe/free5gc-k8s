@@ -1,0 +1,75 @@
+global:
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
+  hub: quay.io/aspenmesh/releases
+
+# Namespaces to never consider for Istio injection.
+# These namespaces do not have to exist, but if they do, they will
+# never have Istio sidecars injected (even if they are annotated for injection)
+# This list includes many system namespaces for Kubernetes and OpenShift, you may
+# want to add any namespaces that your organization uses for system operations.
+excludeNamespaces:
+  - istio-system
+  - kube-node-lease
+  - kube-public
+  - kube-system
+  - openshift
+  - openshift-apiserver
+  - openshift-apiserver-operator
+  - openshift-authentication
+  - openshift-authentication-operator
+  - openshift-cloud-credential-operator
+  - openshift-cluster-machine-approver
+  - openshift-cluster-node-tuning-operator
+  - openshift-cluster-samples-operator
+  - openshift-cluster-storage-operator
+  - openshift-cluster-version
+  - openshift-config
+  - openshift-config-managed
+  - openshift-console
+  - openshift-console-operator
+  - openshift-controller-manager
+  - openshift-controller-manager-operator
+  - openshift-dns
+  - openshift-dns-operator
+  - openshift-etcd
+  - openshift-image-registry
+  - openshift-infra
+  - openshift-ingress
+  - openshift-ingress-operator
+  - openshift-insights
+  - openshift-kni-infra
+  - openshift-kube-apiserver
+  - openshift-kube-apiserver-operator
+  - openshift-kube-controller-manager
+  - openshift-kube-controller-manager-operator
+  - openshift-kube-scheduler
+  - openshift-kube-scheduler-operator
+  - openshift-machine-api
+  - openshift-machine-config-operator
+  - openshift-marketplace
+  - openshift-monitoring
+  - openshift-multus
+  - openshift-network-operator
+  - openshift-node
+  - openshift-openstack-infra
+  - openshift-operator-lifecycle-manager
+  - openshift-operators
+  - openshift-sdn
+  - openshift-service-ca
+  - openshift-service-ca-operator
+  - openshift-service-catalog-apiserver-operator
+  - openshift-service-catalog-controller-manager-operator
+
+# Paths on the host to the CNI installation.
+# These defaults are for OpenShift 4.x
+# See https://istio.io/docs/setup/additional-setup/cni/ for others.
+cniBinDir: /opt/multus/bin
+cniConfDir: /etc/cni/multus/net.d
+cniConfFileName: istio-cni.conf
+chained: false
+
+cni:
+  components:
+    cni:
+      namespace: kube-system

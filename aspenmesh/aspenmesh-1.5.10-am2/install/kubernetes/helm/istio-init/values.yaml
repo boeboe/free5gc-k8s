@@ -1,0 +1,27 @@
+global:
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
+  # Default hub for Istio images.
+  # Releases are published to docker hub under 'istio' project.
+  # Dev builds from prow are on gcr.io
+  hub: quay.io/aspenmesh/releases
+
+  # Default tag for Istio images.
+  tag: 1.5.10-am2
+
+  # imagePullPolicy is applied to istio control plane components.
+  # local tests require IfNotPresent, to avoid uploading to dockerhub.
+  # TODO: Switch to Always as default, and override in the local tests.
+  imagePullPolicy: IfNotPresent
+
+certmanager:
+  enabled: false
+
+job:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 50Mi
+    limits:
+      cpu: 100m
+      memory: 300Mi

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traffic-generator-productpage
+  namespace: default
+data:
+  target.url: http://productpage:9080/productpage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traffic-generator-productpage
+  labels:
+    app: traffic-generator-productpage
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: traffic-generator-productpage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-generator-productpage
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-generator-productpage
+  template:
+    metadata:
+      labels:
+        app: traffic-generator-productpage
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      imagePullSecrets: 
+      - name: aspen-mesh-pull-secret
+      containers:
+      - name: traffic-generator
+        image: quay.io/aspenmesh/demo:traffic-generator-1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TARGET_URL
+          valueFrom:
+            configMapKeyRef:
+              name: traffic-generator-productpage
+              key: target.url
+        - name: SLEEP_TIME
+          value: "1"

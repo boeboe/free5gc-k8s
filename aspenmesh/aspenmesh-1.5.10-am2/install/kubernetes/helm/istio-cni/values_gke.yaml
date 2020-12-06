@@ -1,0 +1,25 @@
+hub: quay.io/aspenmesh/releases
+tag: 1.5.10-am2
+pullPolicy: Always
+
+logLevel: info
+
+# Configuration file to insert istio-cni plugin configuration
+# by default this will be the first file found in the cni-conf-dir
+# Example
+# cniConfFileName: 10-calico.conflist
+
+# CNI bin and conf dir override settings
+# defaults:
+cniBinDir: /home/kubernetes/bin
+cniConfDir: /etc/cni/net.d
+
+excludeNamespaces:
+  - istio-system
+
+# Custom annotations on pod level, if you need them
+podAnnotations: {}
+
+global:
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
