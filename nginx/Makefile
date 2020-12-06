@@ -14,7 +14,7 @@ help: ## This help
 install:  ## Install Nginx OSS
 	printf "deb https://nginx.org/packages/ubuntu/ `lsb_release -cs` nginx\n" | sudo tee -a /etc/apt/sources.list.d/nginx.list
 	printf "deb-src https://nginx.org/packages/ubuntu/ `lsb_release -cs` nginx\n" | sudo tee -a /etc/apt/sources.list.d/nginx.list
-	sudo apt-key adv -y --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 	sudo apt-get update -y
 	sudo apt-get install -y nginx
 	sudo mkdir -p ${NGINX_CERTS_DIR}
