@@ -66,7 +66,7 @@ undeploy: ## Undeployment F5GCore Compoments
 
 
 install-k8s: ## Install k8s using kubespray
-	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git \
+	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
 	cd kubespray && git checkout release-2.14 && \
 	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
 	sudo pip3 install -r requirements.txt && \
