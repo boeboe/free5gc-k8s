@@ -6,10 +6,10 @@ help: ## This help
 
 .DEFAULT_GOAL := help
 
-hostname:
+hostname: ## Change hostname and reboot
 	./hostname.sh
 
-init:
+init: ## Prepare host
 	./password.sh
 	./ssh.sh
 	./update.sh
