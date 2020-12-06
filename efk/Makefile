@@ -18,8 +18,18 @@ install-es-kibana:  ## Install elasticsearch and kibana
 	sudo apt-get install  -y elasticsearch kibana
 	sudo systemctl start elasticsearch
 	sudo systemctl enable elasticsearch
-	sudo systemctl enable kibana
 	sudo systemctl start kibana
+	sudo systemctl enable kibana
+
+config-es-kibana:  ## Install elasticsearch and kibana
+	sudo cp ./elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+	sudo chown root:elasticsearch /etc/elasticsearch/elasticsearch.yml
+	sudo chmod 660 /etc/elasticsearch/elasticsearch.yml
+	sudo cp ./kibana.yml /etc/kibana/kibana.yml
+	sudo chown root:kibana /etc/kibana/kibana.yml
+	sudo chmod 660 /etc/kibana/kibana.yml
+	sudo systemctl restart elasticsearch
+	sudo systemctl restart kibana
 
 install-cerebro:  ## Install elasticsearch web admin tool cerebro
 	sudo docker run -d \
