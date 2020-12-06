@@ -21,6 +21,18 @@ install-es-kibana:  ## Install elasticsearch and kibana
 	sudo systemctl enable kibana
 	sudo systemctl start kibana
 
+install-cerebro:  ## Install elasticsearch web admin tool cerebro
+	sudo docker run -d \
+		-p 9000:9000 \
+		--restart=always \
+		--name cerebro \
+		--privileged \
+		lmenezes/cerebro:latest
+
+uninstall-cerebro:  ## Unistall elasticsearch web admin tool cerebro
+	sudo docker kill cerebro
+	sudo docker rm cerebro
+	sudo docker rmi lmenezes/cerebro:latest
 
 deploy-fluentbit:  ## Deploy EFK stack
 	kubectl apply -f 00_namespace.yaml
