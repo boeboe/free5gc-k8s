@@ -34,7 +34,7 @@ deploy:  ## Deploy EFK stack
 		--namespace=${ES_LOGGING_NAMESPACE}
 		 
 undeploy:  ## Undeploy EFK stack
-	helm uninstall fluent-bit --namespace=${ES_LOGGING_NAMESPACE}
-	helm uninstall elasticsearch --namespace=${ES_LOGGING_NAMESPACE}
-	helm uninstall elasticsearch-operator --namespace=${ES_OPERATOR_NAMESPACE}
-	kubectl delete -f 00_namespace.yaml
+	helm uninstall fluent-bit --namespace=${ES_LOGGING_NAMESPACE} || true
+	helm uninstall elasticsearch --namespace=${ES_LOGGING_NAMESPACE} || true
+	helm uninstall elasticsearch-operator --namespace=${ES_OPERATOR_NAMESPACE} || true
+	kubectl delete -f 00_namespace.yaml || true
