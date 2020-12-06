@@ -14,6 +14,9 @@ init: ## Prepare host
 	./ssh.sh
 	./update.sh
 	./packages.sh
-	./network-2nic.sh
 	./hosts.sh
 	./calicoctl.sh
+	./network-2nic.sh
+
+dist-upgrade: ## Upgrade ubuntu version
+	sudo do-release-upgrade -d 
