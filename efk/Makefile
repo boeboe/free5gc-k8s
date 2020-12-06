@@ -17,9 +17,9 @@ FLUENT_BIT_VALUES=./fluent-bit-udf-values.yaml
 
 deploy:  ## Deploy EFK stack
 	kubectl apply -f 00_namespace.yaml
-	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --values ${ES_OPERATOR_VALUES} --namespace ${ES_OPERATOR_NAMESPACE}
-	helm install elasticsearch ${CHART_DIR}/elasticsearch  --values ${ES_VALUES} --namespace ${ES_LOGGING_NAMESPACE}
-	helm install fluent-bit ${CHART_DIR}/fluent-bit --values ${FLUENT_BIT_VALUES}	--namespace=${ES_LOGGING_NAMESPACE}
+	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --values ${ES_OPERATOR_VALUES} --namespace ${ES_OPERATOR_NAMESPACE} --wait
+	helm install elasticsearch ${CHART_DIR}/elasticsearch  --values ${ES_VALUES} --namespace ${ES_LOGGING_NAMESPACE} --wait
+	helm install fluent-bit ${CHART_DIR}/fluent-bit --values ${FLUENT_BIT_VALUES}	--namespace=${ES_LOGGING_NAMESPACE} --wait
 
 undeploy:  ## Undeploy EFK stack
 	helm uninstall fluent-bit --namespace=${ES_LOGGING_NAMESPACE} || true
