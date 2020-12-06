@@ -12,7 +12,6 @@ ES_OPERATOR_NAMESPACE=es-operator
 ES_LOGGING_NAMESPACE=logging
 
 deploy:  ## Deploy EFK stack
-	helm repo add es-operator ${HELM_REPO}
 	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --wait \
 		--set rbac.enabled=True \
 		--namespace ${ES_OPERATOR_NAMESPACE}
