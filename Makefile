@@ -64,9 +64,14 @@ undeploy: ## Undeployment F5GCore Compoments
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 
+
 install-k8s: ## Install k8s using kubespray
-	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
-	cd kubespray && cp /home/ubuntu/
+	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git \
+	cd kubespray && git checkout release-2.14 && \
+	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
+	sudo pip3 install -r requirements.txt && \
+	ansible-playbook -i inventory/aspenmesh/hosts.yml  --become --become-user=root cluster.yml
+
 
 reboot-k8s: ## Reboot k8s cluster hosts
 	ssh master sudo reboot || true
@@ -75,18 +80,20 @@ reboot-k8s: ## Reboot k8s cluster hosts
 	ssh node3 sudo reboot || true
 	ssh node4 sudo reboot || true
 
+
 git-clone-all: ## Clone all git repos
-	ssh jumphost 		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
-	ssh master  		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
-	ssh node1   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
-	ssh node2   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
-	ssh node3   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
-	ssh node4   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}'
+	ssh jumphost 		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+	ssh master  		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+	ssh node1   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+	ssh node2   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+	ssh node3   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+	ssh node4   		'cd ${HOME_DIR} ; git clone ${GIT_REPO}' || true
+
 
 git-pull-all: ## Pull all git repos
-	ssh jumphost 		'cd ${REPO_DIR}; git pull ; sudo updatedb'
-	ssh master  		'cd ${REPO_DIR}; git pull ; sudo updatedb'
-	ssh node1   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
-	ssh node2   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
-	ssh node3   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
-	ssh node4   		'cd ${REPO_DIR}; git pull ; sudo updatedb'
+	ssh jumphost 		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh master  		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh node1   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh node2   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh node3   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh node4   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
