@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: es-operator
+  labels:
+    name: es-operator
+    # istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging
+  labels:
+    name: logging
+    # istio-injection: enabled
+---

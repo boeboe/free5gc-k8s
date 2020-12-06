@@ -12,6 +12,7 @@ ES_OPERATOR_NAMESPACE=es-operator
 ES_LOGGING_NAMESPACE=logging
 
 deploy:  ## Deploy EFK stack
+	kubectl apply -f 00_namespace.yaml
 	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --wait \
 		--set rbac.enabled=True \
 		--namespace ${ES_OPERATOR_NAMESPACE}
@@ -36,3 +37,4 @@ undeploy:  ## Undeploy EFK stack
 	helm uninstall fluent-bit --namespace=${ES_LOGGING_NAMESPACE}
 	helm uninstall elasticsearch --namespace=${ES_LOGGING_NAMESPACE}
 	helm uninstall elasticsearch-operator --namespace=${ES_OPERATOR_NAMESPACE}
+	kubectl delete -f 00_namespace.yaml
