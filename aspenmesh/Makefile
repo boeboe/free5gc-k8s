@@ -2,10 +2,10 @@
 
 ASPEN_NAMESPACE=istio-system
 ASPEN_VERSION=1.6.12-am3
-# ASPEN_VERSION=1.5.10-am2
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-${ASPEN_VERSION}/manifests/charts
-# CHART_DIR=./aspenmesh-${ASPEN_VERSION}/install/kubernetes/helm
+CERT_DIR=./aspenmesh-${ASPEN_VERSION}/samples/certs
+
 ISTIO_VERSION=1.6.12
 
 .PHONY: help
@@ -18,6 +18,11 @@ help: ## This help
 
 install: istioctl ## Install aspenmesh
 	kubectl create ns ${ASPEN_NAMESPACE} || true
+	kubectl create secret generic cacerts -n ${ASPEN_NAMESPACE} \
+		--from-file=${CERT_DIR}/ca-cert.pem \
+		--from-file=${CERT_DIR}/ca-key.pem \
+		--from-file=${CERT_DIR}/root-cert.pem \
+		--from-file=${CERT_DIR}/cert-chain.pem 
 	helm install istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} --wait || true
 	helm install istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} --wait || true
 	helm install istio-ingress ${CHART_DIR}/gateways/istio-ingress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} --wait || true
