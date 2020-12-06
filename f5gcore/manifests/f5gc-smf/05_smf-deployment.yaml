@@ -53,12 +53,6 @@ spec:
             - containerPort: 8805
               name: if-n4
               protocol: UDP
-        - name: tcpdump
-          image: corfr/tcpdump
-          imagePullPolicy: Always
-          command:
-            - /bin/sleep
-            - infinity
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

@@ -67,11 +67,6 @@ spec:
             - containerPort: 80
               name: http-probe
               protocol: TCP
-        - name: tcpdump
-          image: corfr/tcpdump
-          command:
-            - /bin/sleep
-            - infinity
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

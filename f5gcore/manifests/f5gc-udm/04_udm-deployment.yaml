@@ -39,11 +39,6 @@ spec:
             - containerPort: 29503
               name: f5gc-udm
               protocol: TCP
-        - name: tcpdump
-          image: corfr/tcpdump
-          command:
-            - /bin/sleep
-            - infinity
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

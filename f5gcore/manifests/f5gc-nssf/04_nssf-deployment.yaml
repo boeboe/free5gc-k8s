@@ -47,11 +47,6 @@ spec:
             - containerPort: 29531
               name: f5gc-nssf
               protocol: TCP
-        - name: tcpdump
-          image: corfr/tcpdump
-          command:
-            - /bin/sleep
-            - infinity
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
