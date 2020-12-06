@@ -30,7 +30,7 @@ spec:
                   key: mongo_initdb_database
           volumeMounts:
             - name: f5gc-mongodb-pv
-       mountPath: /data/db
+              mountPath: /data/db
       volumes:
         - name: f5gc-mongodb-pv
           persistentVolumeClaim:
