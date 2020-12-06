@@ -5,7 +5,7 @@ sudo apt-add-repository -y ppa:ansible/ansible
 sudo apt-get -y update
 
 echo "Install packages"
-sudo apt-get install -y locate grc nmap tree siege httpie tcpdump make git wget socat ansible
+sudo apt-get install -y locate net-tools grc nmap tree siege httpie tcpdump make git wget socat ansible
 
 echo "Install helm"
 sudo snap install helm --classic
