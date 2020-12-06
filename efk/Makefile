@@ -16,14 +16,12 @@ deploy:  ## Deploy EFK stack
 	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --wait \
 		--set rbac.enabled=True \
 		--namespace ${ES_OPERATOR_NAMESPACE}
-	sleep 20
 	helm install elasticsearch ${CHART_DIR}/elasticsearch --wait \
 		--set kibana.enabled=true \
 		--set cerebro.enabled=true \
 		--set clientReplicas=1,masterReplicas=1,dataReplicas=1 \
 		--namespace ${ES_LOGGING_NAMESPACE}
-	sleep 120
-	helm install fluent-bit stable/fluent-bit --wait \
+	helm install fluent-bit ${CHART_DIR}/fluent-bit --wait \
 		--set metrics.enabled=true \
 		--set backend.type=es \
 		--set backend.es.time_key='@ts' \
