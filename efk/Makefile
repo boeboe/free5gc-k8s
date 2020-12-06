@@ -11,25 +11,16 @@ CHART_DIR=./charts
 ES_OPERATOR_NAMESPACE=es-operator
 ES_LOGGING_NAMESPACE=logging
 
+ES_OPERATOR_VALUES=./es-operator-udf-values.yaml
+ES_VALUES=./es-udf-values.yaml
+FLUENT_BIT_VALUES=./fluent-bit-udf-values.yaml
+
 deploy:  ## Deploy EFK stack
 	kubectl apply -f 00_namespace.yaml
-	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --wait \
-		--set rbac.enabled=True \
-		--namespace ${ES_OPERATOR_NAMESPACE}
-	helm install elasticsearch ${CHART_DIR}/elasticsearch --wait \
-		--set kibana.enabled=true \
-		--set cerebro.enabled=true \
-		--set clientReplicas=1,masterReplicas=1,dataReplicas=1 \
-		--namespace ${ES_LOGGING_NAMESPACE}
-	helm install fluent-bit ${CHART_DIR}/fluent-bit --wait \
-		--set metrics.enabled=true \
-		--set backend.type=es \
-		--set backend.es.time_key='@ts' \
-		--set backend.es.host=elasticsearch-elasticsearch-cluster \
-		--set backend.es.tls=off \
-		--set backend.es.tls_verify=off \
-		--namespace=${ES_LOGGING_NAMESPACE}
-		 
+	helm install elasticsearch-operator ${CHART_DIR}/elasticsearch-operator --values ${ES_OPERATOR_VALUES} --namespace ${ES_OPERATOR_NAMESPACE}
+	helm install elasticsearch ${CHART_DIR}/elasticsearch  --values ${ES_VALUES} --namespace ${ES_LOGGING_NAMESPACE}
+	helm install fluent-bit ${CHART_DIR}/fluent-bit --values ${FLUENT_BIT_VALUES}	--namespace=${ES_LOGGING_NAMESPACE}
+
 undeploy:  ## Undeploy EFK stack
 	helm uninstall fluent-bit --namespace=${ES_LOGGING_NAMESPACE} || true
 	helm uninstall elasticsearch --namespace=${ES_LOGGING_NAMESPACE} || true

@@ -1,0 +1,10 @@
+metrics:
+  enabled: true
+
+backend:
+  type: es
+  es:
+    time_key: '@ts'
+    host: elasticsearch-elasticsearch-cluster
+    tls: off
+    tls_verify: off
