@@ -18,7 +18,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: dbg-mongo-express
+  name: mongoexpress
 spec:
   domainName: "mongo-express.udf-demo.org"
   exposedApplications:

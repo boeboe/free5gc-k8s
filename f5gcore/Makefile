@@ -58,6 +58,13 @@ MONGODB_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-mongodb
 MONGO_EXPRESS_K8S_DEPLOY_DIR	?= ${K8S_DEPLOY_DIR}/dbg-mongo-express
 N6DUMMY_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy
 
+MONGO_EXPRESS_CERT_DIR=../certificates/mongo-express
+F5GC_WEBUI_CERT_DIR=../certificates/f5gc-webui
+MONGO_EXPRESS_KEY=${MONGO_EXPRESS_CERT_DIR}/mongo-express.key
+MONGO_EXPRESS_CERT=${MONGO_EXPRESS_CERT_DIR}/mongo-express.cert
+F5GC_WEBUI_KEY=${F5GC_WEBUI_CERT_DIR}/f5gc-webui.key
+F5GC_WEBUI_CERT=${F5GC_WEBUI_CERT_DIR}/f5gc-webui.cert
+
 .PHONY: help
 
 help: ## This help
@@ -219,6 +226,8 @@ clean:
 
 deploy:  ## Deploy F5GCore Components
 	kubectl apply -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
+	kubectl create secret tls f5gc-mongoexpress --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system
+	kubectl create secret tls f5gc-f5gcwebui --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
@@ -250,6 +259,8 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
+	kubectl delete secret f5gc-mongoexpress --namespace istio-system 
+	kubectl delete secret f5gc-f5gcwebui --namespace istio-system 
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 
 view-all:  ## View all free5gc pods, services and serviceaccounts

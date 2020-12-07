@@ -18,7 +18,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gc-webui
+  name: f5gcwebui
 spec:
   domainName: "f5gc-webui.udf-demo.org"
   exposedApplications:
