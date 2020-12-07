@@ -3,7 +3,7 @@
 set -xEeuo pipefail
 
 rm -f /usr/bin/kubectl
-curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl
+curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.18.10/bin/linux/amd64/kubectl
 chmod +x /usr/bin/kubectl
 
 # Based on https://github.com/morvencao/kube-mutating-webhook-tutorial/blob/master/deployment/webhook-patch-ca-bundle.sh
