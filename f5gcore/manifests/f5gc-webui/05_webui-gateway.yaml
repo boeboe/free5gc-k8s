@@ -20,13 +20,7 @@ kind: SecureIngress
 metadata:
   name: f5gcwebui
 spec:
-  domainName: 
-    - "f5gc-webui.udf-demo.org"
-    - 10.1.1.5
-    - 10.1.1.6
-    - 10.1.1.7
-    - 10.1.1.8
-    - 10.1.1.9
+  domainName: "f5gc-webui.udf-demo.org, 10.1.1.5, 10.1.1.6, 10.1.1.7, 10.1.1.8, 10.1.1.9"
   exposedApplications:
     - applicationReference:
         name: f5gc-webui
