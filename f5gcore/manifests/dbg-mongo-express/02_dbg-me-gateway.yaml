@@ -32,7 +32,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: mongoexpress-ip1
+  name: mongoexpress1
 spec:
   domainName: "10.1.1.5"
   exposedApplications:
@@ -46,7 +46,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: mongoexpress-ip2
+  name: mongoexpress2
 spec:
   domainName: "10.1.1.6"
   exposedApplications:
@@ -60,7 +60,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: mongoexpress-ip3
+  name: mongoexpress3
 spec:
   domainName: "10.1.1.7"
   exposedApplications:
@@ -74,7 +74,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: mongoexpress-ip4
+  name: mongoexpress4
 spec:
   domainName: "10.1.1.8"
   exposedApplications:
@@ -88,7 +88,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: mongoexpress-ip5
+  name: mongoexpress5
 spec:
   domainName: "10.1.1.9"
   exposedApplications:

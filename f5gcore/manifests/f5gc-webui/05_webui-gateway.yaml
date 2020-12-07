@@ -32,7 +32,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gcwebui-ip1
+  name: f5gcwebui1
 spec:
   domainName: "10.1.1.5"
   exposedApplications:
@@ -46,7 +46,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gcwebui-ip2
+  name: f5gcwebui2
 spec:
   domainName: "10.1.1.6"
   exposedApplications:
@@ -60,7 +60,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gcwebui-ip3
+  name: f5gcwebui3
 spec:
   domainName: "10.1.1.7"
   exposedApplications:
@@ -74,7 +74,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gcwebui-ip4
+  name: f5gcwebui4
 spec:
   domainName: "10.1.1.8"
   exposedApplications:
@@ -88,7 +88,7 @@ spec:
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: SecureIngress
 metadata:
-  name: f5gcwebui-ip5
+  name: f5gcwebui5
 spec:
   domainName: "10.1.1.9"
   exposedApplications:
