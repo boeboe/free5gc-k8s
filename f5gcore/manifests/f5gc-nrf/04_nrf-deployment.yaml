@@ -1,11 +1,3 @@
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: f5gc-nrf
-  labels:
-    app: f5gc-nrf
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,7 +21,6 @@ spec:
       labels:
         app: f5gc-nrf
     spec:
-      serviceAccountName: f5gc-nrf
       securityContext:
         runAsUser: 0
         runAsGroup: 0
