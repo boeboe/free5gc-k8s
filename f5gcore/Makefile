@@ -251,3 +251,7 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
+
+view-all:
+	kubectl get svc -n free5gc -o wide 
+	kubectl get pods -n free5gc -o wide 
