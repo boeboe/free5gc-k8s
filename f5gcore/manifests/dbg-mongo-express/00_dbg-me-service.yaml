@@ -9,7 +9,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - name: dbg-mongo-express
+  - name: http-mongo-express
     port: 8081
     protocol: TCP
     targetPort: 8081
