@@ -10,7 +10,6 @@ CERT_DIR=./aspenmesh-${ASPEN_VERSION}/samples/certs
 ISTIO_VERSION=1.6.12
 
 HELM_ARGS=--debug
-# HELM_ARGS=--debug --wait
 
 .PHONY: help
 
