@@ -252,8 +252,9 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 
-view-all:  ## View all free5gc pods and services
-	kubectl get svc -n f5gc -o wide 
+view-all:  ## View all free5gc pods, services and serviceaccounts
+	kubectl get serviceaccounts -n f5gc -o wide 
+	kubectl get services -n f5gc -o wide 
 	kubectl get pods -n f5gc -o wide 
 
 exec-gnbsim:  ## Kubectl exec in gnbsim container
