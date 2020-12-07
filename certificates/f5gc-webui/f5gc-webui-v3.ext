@@ -5,9 +5,10 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=udf-demo.org
-DNS.2=f5gc-webui
-DNS.3=localhost
+DNS.1=f5gc-webui.udf-demo.org
+DNS.2=udf-demo.org
+DNS.3=f5gc-webui
+DNS.4=localhost
 IP.1=10.1.1.4
 IP.2=10.1.1.5
 IP.3=10.1.1.6
