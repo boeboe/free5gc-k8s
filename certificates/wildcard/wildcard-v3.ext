@@ -1,0 +1,23 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1=*.udf-demo.org
+DNS.2=udf-demo.org
+DNS.3=localhost
+IP.1=10.1.1.4
+IP.2=10.1.1.5
+IP.3=10.1.1.6
+IP.4=10.1.1.7
+IP.5=10.1.1.8
+IP.6=10.1.1.9
+IP.7=10.1.10.4
+IP.8=10.1.10.5
+IP.9=10.1.10.6
+IP.10=10.1.10.7
+IP.11=10.1.10.8
+IP.12=10.1.10.9
+IP.13=127.0.0.1
