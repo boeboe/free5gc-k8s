@@ -18,7 +18,6 @@ help: ## This help
 
 .DEFAULT_GOAL := help
 
-
 install: istioctl ## Install aspenmesh
 	kubectl create ns ${ASPEN_NAMESPACE} || true
 	kubectl create secret generic cacerts -n ${ASPEN_NAMESPACE} \
@@ -35,7 +34,6 @@ install: istioctl ## Install aspenmesh
 	helm install istio-telemetry ${CHART_DIR}/istio-telemetry/grafana --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
 
-
 upgrade: ## Upgrade aspenmesh
 	helm upgrade istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} ${HELM_ARGS} || true
 	sleep 10
@@ -45,7 +43,6 @@ upgrade: ## Upgrade aspenmesh
 	helm upgrade istio-egress ${CHART_DIR}/gateways/istio-egress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	helm upgrade istio-telemetry ${CHART_DIR}/istio-telemetry/grafana --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
-
 
 uninstall: ## Uninstall aspenmesh
 	kubectl delete -f ./post-install || true
@@ -59,3 +56,9 @@ uninstall: ## Uninstall aspenmesh
 istioctl: ## Install istioctl
 	curl -sL https://istio.io/downloadIstioctl | ISTIO_VERSION=${ISTIO_VERSION} sh - && \
 	sudo cp ~/.istioctl/bin/istioctl /usr/local/bin
+
+post-install: ## Post installation steps
+	kubectl apply -f ./post-install/
+
+post-uninstall: ## Post uninstallation steps
+	kubectl delete -f ./post-install/
