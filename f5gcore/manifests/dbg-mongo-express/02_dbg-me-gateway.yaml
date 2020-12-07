@@ -20,7 +20,13 @@ kind: SecureIngress
 metadata:
   name: mongoexpress
 spec:
-  domainName: "mongo-express.udf-demo.org"
+  domainName: 
+    - "mongo-express.udf-demo.org"
+    - 10.1.1.5
+    - 10.1.1.6
+    - 10.1.1.7
+    - 10.1.1.8
+    - 10.1.1.9
   exposedApplications:
     - applicationReference:
         name: dbg-mongo-express
