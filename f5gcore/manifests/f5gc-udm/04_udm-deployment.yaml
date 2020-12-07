@@ -1,3 +1,11 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: f5gc-udm
+  labels:
+    app: f5gc-udm
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,6 +29,7 @@ spec:
       labels:
         app: f5gc-udm
     spec:
+      serviceAccountName: f5gc-udm
       securityContext:
         runAsUser: 0
         runAsGroup: 0
