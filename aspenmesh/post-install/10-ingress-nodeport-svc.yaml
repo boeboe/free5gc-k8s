@@ -5,7 +5,7 @@ metadata:
     app: istio-ingressgateway
     istio: ingressgateway
     release: istio-ingress
-  name: istio-ingressgateway
+  name: istio-ingressgateway-np
   namespace: istio-system
 spec:
   ports:
