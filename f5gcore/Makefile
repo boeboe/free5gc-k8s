@@ -226,8 +226,8 @@ clean:
 
 deploy:  ## Deploy F5GCore Components
 	kubectl apply -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
-	kubectl create secret tls f5gc-mongoexpress --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system
-	kubectl create secret tls f5gc-f5gcwebui --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system
+	kubectl create secret tls mongoexpress-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system
+	kubectl create secret tls f5gcwebui-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
