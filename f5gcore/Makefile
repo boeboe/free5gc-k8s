@@ -227,17 +227,7 @@ clean:
 deploy:  ## Deploy F5GCore Components
 	kubectl apply -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 	kubectl create secret tls mongoexpress-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
-	kubectl create secret tls mongoexpress1-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
-	kubectl create secret tls mongoexpress2-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
-	kubectl create secret tls mongoexpress3-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
-	kubectl create secret tls mongoexpress4-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
-	kubectl create secret tls mongoexpress5-f5gc --key ${MONGO_EXPRESS_KEY} --cert ${MONGO_EXPRESS_CERT} --namespace istio-system || true
 	kubectl create secret tls webui-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
-	kubectl create secret tls webui1-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
-	kubectl create secret tls webui2-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
-	kubectl create secret tls webui3-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
-	kubectl create secret tls webui4-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
-	kubectl create secret tls webui5-f5gc --key ${F5GC_WEBUI_KEY} --cert ${F5GC_WEBUI_CERT} --namespace istio-system || true
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
