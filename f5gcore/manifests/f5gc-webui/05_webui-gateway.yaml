@@ -1,0 +1,30 @@
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: Application
+metadata:
+  name: f5gc-webui
+spec:
+  inbound:
+    ports:
+      - number: 5000
+        protocol: HTTP
+        paths:
+          - expose:
+              public: true
+              jwtSecured: false
+            uri:
+              prefix: /
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: SecureIngress
+metadata:
+  name: f5gc-webui
+spec:
+  domainName: "f5gc-webui.udf-demo.org"
+  exposedApplications:
+    - applicationReference:
+        name: f5gc-webui
+        namespace: f5gc
+      serviceReference:
+        name: f5gc-webui
+        namespace: f5gc
+---

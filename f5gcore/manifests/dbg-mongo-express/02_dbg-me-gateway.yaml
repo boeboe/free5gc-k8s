@@ -1,0 +1,30 @@
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: Application
+metadata:
+  name: dbg-mongo-express
+spec:
+  inbound:
+    ports:
+      - number: 8081
+        protocol: HTTP
+        paths:
+          - expose:
+              public: true
+              jwtSecured: false
+            uri:
+              prefix: /
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: SecureIngress
+metadata:
+  name: dbg-mongo-express
+spec:
+  domainName: "mongo-express.udf-demo.org"
+  exposedApplications:
+    - applicationReference:
+        name: dbg-mongo-express
+        namespace: f5gc
+      serviceReference:
+        name: dbg-mongo-express
+        namespace: f5gc
+---

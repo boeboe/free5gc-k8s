@@ -4,5 +4,6 @@ resources:
   - 02_webui-configmap.yaml
   - 03_webui-service.yaml
   - 04_webui-deployment.yaml
+  - 05_webui-gateway.yaml
 
 namespace: f5gc
