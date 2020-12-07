@@ -1,0 +1,193 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspen-mesh-controlplane
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-controlplane
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: aspen-mesh-controlplane
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9105"
+        checksum/config: {{ include (print $.Template.BasePath "/analytics-manifest-configmap.yaml") . | sha256sum }}
+      labels:
+        app: aspen-mesh-controlplane
+    spec:
+      serviceAccountName: aspen-mesh-controlplane
+{{- if .Values.global.priorityClassName }}
+      priorityClassName: "{{ .Values.global.priorityClassName }}"
+{{- end }}
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: controlplane
+          image: {{ template "aspen-mesh-controlplane.imagePath" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command:
+            - "controlplane"
+            - "--production-logging"
+            {{ if .Values.logLevel }}
+            - "--logging-level={{ .Values.logLevel }}"
+            {{ end }}
+            - "--listen-grpc=0.0.0.0:19000"
+            - "--listen-http={{ template "aspen-mesh-controlplane.httpListenAddr" . }}:{{ template "aspen-mesh-controlplane.httpListenPort" . }}"
+            - "--listen-admin=0.0.0.0:9105"
+            - "--listen-alert-manager=0.0.0.0:19005"
+            - "--listen-validation=0.0.0.0:{{ template "aspen-mesh-controlplane.validationPort" . }}"
+            - "--clusterid={{ .Values.clusterId }}"
+            - "--alertmanager-url=http://aspen-mesh-alertmanager.{{ .Release.Namespace }}:80"
+            {{ if .Values.globalDebugThreshold }}
+            - "--global-debug-threshold={{ .Values.globalDebugThreshold }}"
+            {{ end }}
+            {{ if .Values.domainUrl }}
+            - "--domain-url={{ .Values.domainUrl }}"
+            {{ end }}
+            {{ if .Values.prometheusUrl }}
+            - "--prometheus-query={{ .Values.prometheusUrl }}"
+            {{ else }}
+            - "--prometheus-query=http://aspenmesh:2QxoVJLNG8Rhc7bmYqPmI171@aspen-mesh-metrics-collector.{{ .Release.Namespace }}.svc.cluster.local:19090"
+            {{ end }}
+            {{ if and .Values.userAuth (.Values.userAuth.type) }}
+            - "--user-auth={{ template "aspen-mesh-controlplane.internalAuthType" . }}"
+            {{ if eq .Values.userAuth.type "jwt" }}
+            - "--user-auth-jwks={{ .Values.userAuth.jwt.jwks }}"
+            - "--user-unauth-redirect={{ .Values.userAuth.jwt.redirectUrl }}"
+            {{ if .Values.userAuth.jwt.claims }}
+            - "--user-auth-claims={{ .Values.userAuth.jwt.claims }}"
+            {{ end }}
+            {{ end }}
+            {{ end }}
+            {{ if .Values.kubeConfig }}
+            - "--kubeconfig={{ .Values.kubeConfig }}"
+            {{ end }}
+            {{ if .Values.vetRunPeriod }}
+            - "--vet-run-period={{ .Values.vetRunPeriod }}"
+            {{ end }}
+            {{ if .Values.healthRunPeriod }}
+            - "--health-run-period={{ .Values.healthRunPeriod }}"
+            {{ end }}
+            {{ if eq .Values.global.tracer.zipkin.address "aspen-mesh-jaeger-collector.istio-system:9411" }}
+            - "--jaeger-url=http://aspen-mesh-jaeger-query"
+            {{ end }}
+            - "--namespace={{ .Release.Namespace }}"
+          ports:
+            - containerPort: 19000
+              name: grpc
+            - containerPort: {{ template "aspen-mesh-controlplane.httpListenPort" . }}
+              name: http
+            - containerPort: 19005
+              name: http-am
+            - containerPort: {{ template "aspen-mesh-controlplane.validationPort" .}}
+              name: https-val
+            - containerPort: 9105
+              name: http-admin
+          resources:
+{{- if .Values.resources }}
+{{ toYaml .Values.resources | indent 12 }}
+{{- end }}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 9105
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 10
+          env:
+          - name: HELM_CHART_VERSION
+            value: {{ .Chart.Version }}
+          - name: TOP_N_ENABLED
+            value: {{ .Values.topNMetrics.enabled | default "false" | quote }}
+          volumeMounts:
+          - mountPath: /etc/webhook/certs
+            name: webhook-certs
+            readOnly: true
+          - mountPath: /analytics
+            name: aspen-mesh-analytics
+{{- if .Values.multiclusterEnabled }}
+          - mountPath: /config
+            name: multicluster-config
+{{- end }}
+        - name: modelruntime
+          image: {{ template "aspen-mesh-controlplane.modelruntimeImagePath" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 50051
+              name: grpc
+            - containerPort: 8000
+              name: metrics
+          env:
+          - name: HELM_CHART_VERSION
+            value: {{ .Chart.Version }}
+          - name: TOP_N_ENABLED
+            value: {{ .Values.topNMetrics.enabled | default "false" | quote }}
+          resources:
+{{- if .Values.modelRuntimeResources }}
+{{ toYaml .Values.modelRuntimeResources | indent 12 }}
+{{- end }}
+{{- if eq .Values.userAuth.type "oauthOpenshift" }}
+        - name: oauth-proxy
+          image: {{ .Values.global.hub }}:{{ .Values.openshiftOauthProxy.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          args:
+            - -provider=openshift
+            - -http-address=0.0.0.0:19001
+            - -https-address=
+            - -email-domain=*
+            - -upstream=http://127.0.0.1:19002
+            - -tls-cert=/etc/tls/private/tls.crt
+            - -tls-key=/etc/tls/private/tls.key
+            - -client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+            - -cookie-secret=${COOKIE_SECRET}
+            - -openshift-service-account=aspen-mesh-controlplane
+            - -openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          ports:
+            - name: oauth-proxy
+              containerPort: 19001
+              protocol: TCP
+          env:
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aspen-mesh-oauth-proxy
+                  key: cookie-secret
+          volumeMounts:
+            - mountPath: /etc/tls/private
+              name: aspen-mesh-oauth-proxy-certs
+              readOnly: true
+{{- end }}
+      volumes:
+      - name: webhook-certs
+        secret:
+          secretName: controlplane-webhook-certs
+      - configMap:
+          name: aspen-mesh-analytics-manifest
+        name: aspen-mesh-analytics
+{{- if .Values.multiclusterEnabled }}
+      - configMap:
+          name: aspen-mesh-controlplane
+        name: multicluster-config
+{{- end }}
+{{- if eq .Values.userAuth.type "oauthOpenshift" }}
+      - name: aspen-mesh-oauth-proxy-certs
+        secret:
+          secretName: aspen-mesh-controlplane-tls
+{{- end }}
+      affinity:
+        {{- include "nodeaffinity" . | indent 6 }}
+        {{- include "podAntiAffinity" . | indent 6 }}

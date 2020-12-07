@@ -1,0 +1,129 @@
+cni:
+  hub: ""
+  tag: 1.6.12-am2
+  image: install-cni
+  pullPolicy: Always
+
+  logLevel: info
+
+  # Configuration file to insert istio-cni plugin configuration
+  # by default this will be the first file found in the cni-conf-dir
+  # Example
+  # cniConfFileName: 10-calico.conflist
+
+  # CNI bin and conf dir override settings
+  # defaults:
+  cniBinDir: /var/lib/cni/bin
+  cniConfDir: /etc/cni/multus/net.d
+  cniConfFileName: istio-cni.conf
+
+  excludeNamespaces:
+    - istio-system
+    - kube-node-lease
+    - kube-public
+    - kube-system
+    - openshift
+    - openshift-apiserver
+    - openshift-apiserver-operator
+    - openshift-authentication
+    - openshift-authentication-operator
+    - openshift-cloud-credential-operator
+    - openshift-cluster-machine-approver
+    - openshift-cluster-node-tuning-operator
+    - openshift-cluster-samples-operator
+    - openshift-cluster-storage-operator
+    - openshift-cluster-version
+    - openshift-config
+    - openshift-config-managed
+    - openshift-console
+    - openshift-console-operator
+    - openshift-controller-manager
+    - openshift-controller-manager-operator
+    - openshift-dns
+    - openshift-dns-operator
+    - openshift-etcd
+    - openshift-image-registry
+    - openshift-infra
+    - openshift-ingress
+    - openshift-ingress-operator
+    - openshift-insights
+    - openshift-kni-infra
+    - openshift-kube-apiserver
+    - openshift-kube-apiserver-operator
+    - openshift-kube-controller-manager
+    - openshift-kube-controller-manager-operator
+    - openshift-kube-scheduler
+    - openshift-kube-scheduler-operator
+    - openshift-machine-api
+    - openshift-machine-config-operator
+    - openshift-marketplace
+    - openshift-monitoring
+    - openshift-multus
+    - openshift-network-operator
+    - openshift-node
+    - openshift-openstack-infra
+    - openshift-operator-lifecycle-manager
+    - openshift-operators
+    - openshift-sdn
+    - openshift-service-ca
+    - openshift-service-ca-operator
+    - openshift-service-catalog-apiserver-operator
+    - openshift-service-catalog-controller-manager-operator
+
+  # Custom annotations on pod level, if you need them
+  podAnnotations: {}
+
+  # If this value is set a RoleBinding will be created
+  # in the same namespace as the istio-cni DaemonSet is created.
+  # This can be used to bind a preexisting ClusterRole to the istio/cni ServiceAccount
+  # e.g. if you use PodSecurityPolicies
+  psp_cluster_role: ""
+
+  # Deploy the config files as plugin chain (value "true") or as standalone files in the conf dir (value "false")?
+  # Some k8s flavors (e.g. OpenShift) do not support the chain approach, set to false if this is the case
+  chained: false
+
+  repair:
+    enabled: true
+    hub: ""
+    tag: ""
+
+    labelPods: true
+    deletePods: true
+
+    initContainerName: "istio-validation"
+
+    brokenPodLabelKey: "cni.istio.io/uninitialized"
+    brokenPodLabelValue: "true"
+  components:
+    cni:
+      namespace: kube-system
+
+global:
+  certificateCustomFields: false
+  
+  # generated certificates will use signature algorithm
+  # ECDSA with a P-256 curve; for this to work, an ECDSA P-256 certificate must
+  # be loaded in as the root CA certificate
+  enableEccCertificates: false
+
+  # Default hub for Istio images.
+  # Releases are published to docker hub under 'istio' project.
+  # Dev builds from prow are on gcr.io
+  hub: quay.io/aspenmesh/releases
+
+  # Default tag for Istio images.
+  tag: latest
+
+  # Specify image pull policy if default behavior isn't desired.
+  # Default behavior: latest images will be Always else IfNotPresent.
+  imagePullPolicy: ""
+
+  # ImagePullSecrets for all ServiceAccount, list of secrets in the same namespace
+  # to use for pulling any images in pods that reference this ServiceAccount.
+  # For components that don't use ServiceAccounts (i.e. grafana, servicegraph, tracing)
+  # ImagePullSecrets will be added to the corresponding Deployment(StatefulSet) objects.
+  # Must be set for any clustser configured with private docker registry.
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
+    # - private-registry-key

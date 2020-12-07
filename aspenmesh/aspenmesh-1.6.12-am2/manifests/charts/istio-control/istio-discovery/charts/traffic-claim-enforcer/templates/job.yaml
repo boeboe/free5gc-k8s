@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-traffic-claim-enforcer
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade,post-rollback
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    app: traffic-claim-enforcer
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: configure-traffic-claim-enforcer
+      labels:
+        app: traffic-claim-enforcer
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: traffic-claim-enforcer-configurator-service-account
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: kubectl
+          image: "{{ .Values.global.hub }}:kubectl-{{.Values.global.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args: [ "/tmp/cert/run.sh", "--namespace", "{{ .Release.Namespace }}" ]
+          volumeMounts:
+            - mountPath: "/tmp/cert"
+              name: tmp-configmap-certs
+      volumes:
+        - name: tmp-configmap-certs
+          configMap:
+            name: traffic-claim-enforcer-configurator
+      restartPolicy: OnFailure

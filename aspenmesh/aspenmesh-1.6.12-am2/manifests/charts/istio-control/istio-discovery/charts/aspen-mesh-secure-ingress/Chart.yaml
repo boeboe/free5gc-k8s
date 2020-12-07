@@ -1,0 +1,21 @@
+apiVersion: v1
+name: aspen-mesh-secure-ingress
+version: 1.6.12-am2
+appVersion: 1.6.12-am2
+description: Helm chart for Aspen Mesh Secure Ingress
+maintainers:
+- name: Aspen Mesh Support
+  email: support@aspenmesh.io
+  url: https://aspenmesh.io
+keywords:
+- aspen-mesh
+- policy
+- secure
+- ingress
+- istio
+sources:
+- https://aspenmesh.io/
+- https://github.com/aspenmesh/api
+- https://github.com/aspenmesh/apiserver
+engine: gotpl
+icon: https://aspenmesh.io/wp-content/uploads/2018/06/favicon-192.png

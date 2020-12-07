@@ -1,0 +1,68 @@
+aspen-mesh-controlplane:
+  # The name of the cluster where Aspen Mesh is being installed.
+  clusterId: F5GCore
+
+  userAuth:
+    # type can be set to `jwt` or `none`. JWT authentication is highly recommended.
+    type: none
+    # If type is set to jwt, use the below parameters for configuration:
+    jwt:
+      # jwks (Required) - The URL for retrieving the Json Web Keys (JWKs) used for validating Json Web Tokens (JWTs).
+      jwks: https://YOUR_DOMAIN/.well-known/jwks.json
+      # redirectUrl (Required) - The URL that users should be redirected to if they're not logged in.
+      redirectUrl: https://YOUR_DOMAIN/login
+      # (Optional) - A comma delimited list of claims used for validating JWTs. Example "aud=aspenmesh.io,role=k8s.admin". Defaults to "aud=aspenmesh.io"
+      #claims: aud=aspenmesh:io,role=k8s:admin
+  
+aspen-mesh-secure-ingress:
+  # enabled by default, which is highly recommended.
+  enabled: true
+  # Email to use for Let's Encrypt registration (used for certificate expiry notices)
+  # Leave blank ("") if you wish to manage your own TLS certificates.
+  lets-encrypt-email: ""
+  # Enable external-dns management for Secure Ingress resources
+  externalDnsEnabled: false
+  
+gateways:
+  istio-ingressgateway:
+    enabled: true
+    type: ClusterIP
+
+  istio-egressgateway:
+    enabled: true
+    env:
+      # Needed to route traffic via egress gateway if desired.
+      ISTIO_META_REQUESTED_NETWORK_VIEW: "external"
+
+prometheus:
+  enabled: true
+
+jaeger:
+  enabled: true
+  
+cassandra:
+  enabled: true
+  fullnameOverride: aspen-mesh-cassandra
+
+external-dns:
+  # enabled by default
+  enabled: false
+  aws:
+    # Credentials secret for the IAM role that can access Route 53 for DNS
+    # management. Only necessary if using external-dns management and not
+    # using kube2iam, kiam, or EKS roles.
+    credentials:
+      secretName: YOUR_SECRET_NAME
+  # Domain filter to limit the domains external-dns will attempt to create
+  # records for. If set to .foo.bar.com, would limit to *.foo.bar.com
+  domainFilter: ['YOUR_DOMAIN_SUFFIX']
+  # Limits the hosted zones to which external-dns has access to update
+  # records in Route 53
+  zoneIdFilter: ['YOUR_ZONE_ID_HERE']
+
+  #aspen-mesh-metrics-collector:
+  #server:
+  #  # (Optional) For configurations where PVCs are manually allocated
+  #  persistentVolume:
+  #    # Add the name of the manually created PVC. (e.g. aspen-mesh-metrics-collector)
+  #    existingClaim: ['YOUR_PVC_NAME']

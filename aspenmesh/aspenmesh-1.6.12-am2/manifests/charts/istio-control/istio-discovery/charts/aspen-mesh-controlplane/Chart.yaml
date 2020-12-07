@@ -1,0 +1,12 @@
+apiVersion: v1
+name: aspen-mesh-controlplane
+version: 1.6.12-am2
+appVersion: 1.6.12-am2
+tillerVersion: ">=2.7.2"
+description: A Helm chart for managing Aspen Mesh control plane
+keywords:
+  - istio
+  - aspenmesh
+  - controlplane
+engine: gotpl
+icon: https://aspenmesh.io/wp-content/uploads/2018/06/favicon-192.png

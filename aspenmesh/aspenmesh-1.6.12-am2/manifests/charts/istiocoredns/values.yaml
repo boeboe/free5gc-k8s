@@ -1,0 +1,93 @@
+#
+# addon istiocoredns tracing configuration
+#
+istiocoredns:
+  enabled: false
+  replicaCount: 1
+  rollingMaxSurge: 100%
+  rollingMaxUnavailable: 25%
+  coreDNSImage: coredns/coredns
+  coreDNSTag: 1.6.2
+  # Source code for the plugin can be found at
+  # https://github.com/istio-ecosystem/istio-coredns-plugin
+  # The plugin listens for DNS requests from coredns server at 127.0.0.1:8053
+  coreDNSPluginImage: istio/coredns-plugin:0.2-istio-1.1
+  nodeSelector: {}
+  tolerations: []
+  podAnnotations: {}
+  resources: {}
+  # Specify the pod anti-affinity that allows you to constrain which nodes
+  # your pod is eligible to be scheduled based on labels on pods that are
+  # already running on the node rather than based on labels on nodes.
+  # There are currently two types of anti-affinity:
+  #    "requiredDuringSchedulingIgnoredDuringExecution"
+  #    "preferredDuringSchedulingIgnoredDuringExecution"
+  # which denote "hard" vs. "soft" requirements, you can define your values
+  # in "podAntiAffinityLabelSelector" and "podAntiAffinityTermLabelSelector"
+  # correspondingly.
+  # For example:
+  # podAntiAffinityLabelSelector:
+  # - key: security
+  #   operator: In
+  #   values: S1,S2
+  #   topologyKey: "kubernetes.io/hostname"
+  # This pod anti-affinity rule says that the pod requires not to be scheduled
+  # onto a node if that node is already running a pod with label having key
+  # "security" and value "S1".
+  podAntiAffinityLabelSelector: []
+  podAntiAffinityTermLabelSelector: []
+
+global:
+  hub: quay.io/aspenmesh/releases
+  tag: 1.6.12-am2
+
+  # Specify pod scheduling arch(amd64, ppc64le, s390x) and weight as follows:
+  #   0 - Never scheduled
+  #   1 - Least preferred
+  #   2 - No preference
+  #   3 - Most preferred
+  arch:
+    amd64: 2
+    s390x: 2
+    ppc64le: 2
+
+  # Default node selector to be applied to all deployments so that all pods can be
+  # constrained to run a particular nodes. Each component can overwrite these default
+  # values by adding its node selector block in the relevant section below and setting
+  # the desired values.
+  defaultNodeSelector: {}
+
+  # Default node tolerations to be applied to all deployments so that all pods can be
+  # scheduled to a particular nodes with matching taints. Each component can overwrite
+  # these default values by adding its tolerations block in the relevant section below
+  # and setting the desired values.
+  # Configure this field in case that all pods of Istio control plane are expected to
+  # be scheduled to particular nodes with specified taints.
+  defaultTolerations: []
+
+  # Kubernetes >=v1.11.0 will create two PriorityClass, including system-cluster-critical and
+  # system-node-critical, it is better to configure this in order to make sure your Istio pods
+  # will not be killed because of low priority class.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
+  # for more detail.
+  priorityClassName: ""
+
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
+
+  # Specify image pull policy if default behavior isn't desired.
+  # Default behavior: latest images will be Always else IfNotPresent.
+  imagePullPolicy: ""
+
+  # A minimal set of requested resources to applied to all deployments so that
+  # Horizontal Pod Autoscaler will be able to function (if set).
+  # Each component can overwrite these default values by adding its own resources
+  # block in the relevant section below and setting the desired resources values.
+  defaultResources:
+    requests:
+      cpu: 10m
+    #   memory: 128Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+

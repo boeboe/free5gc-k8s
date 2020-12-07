@@ -1,0 +1,194 @@
+#
+# addon prometheus configuration
+#
+
+serviceImage: # Override with appropriate image and tag.
+alertmanagerImage: # Override with appropriate image and tag.
+configmapReloadImage: # Override with appropriate image and tag.
+nodeSelector: {}
+tolerations: []
+
+# Specify the pod anti-affinity that allows you to constrain which nodes
+# your pod is eligible to be scheduled based on labels on pods that are
+# already running on the node rather than based on labels on nodes.
+# There are currently two types of anti-affinity:
+#    "requiredDuringSchedulingIgnoredDuringExecution"
+#    "preferredDuringSchedulingIgnoredDuringExecution"
+# which denote "hard" vs. "soft" requirements, you can define your values
+# in "podAntiAffinityLabelSelector" and "podAntiAffinityTermLabelSelector"
+# correspondingly.
+# For example:
+# podAntiAffinityLabelSelector:
+# - key: security
+#   operator: In
+#   values: S1,S2
+#   topologyKey: "kubernetes.io/hostname"
+# This pod anti-affinity rule says that the pod requires not to be scheduled
+# onto a node if that node is already running a pod with label having key
+# "security" and value "S1".
+podAntiAffinityLabelSelector: []
+podAntiAffinityTermLabelSelector: []
+
+server:
+
+  enabled: true
+  replicaCount: 1
+  
+  prefixURL: ""
+  
+  service:
+    annotations: {}
+    servicePort: 19090
+    nodePort:
+      enabled: false
+      port: 32090
+  
+  security:
+    enabled: true
+  
+  persistentVolume:
+    ## If true, metrics-collector will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
+    enabled: true
+  
+    ## metrics-collector data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    accessModes:
+      - ReadWriteOnce
+  
+    ## metrics-collector data Persistent Volume Claim annotations
+    ##
+    annotations: {}
+  
+    ## metrics-collector data Persistent Volume existing claim name
+    ## Requires persistentVolume.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+  
+    ## metrics-collector data Persistent Volume size
+    ##
+    size: 10Gi
+  
+    ## metrics-collector data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+  
+  emptyDir:
+    sizeLimit: ""
+
+  provisionPrometheusCert: true
+
+alertmanager:  
+  ## alertmanager container image
+  ##
+  image:
+    pullPolicy: IfNotPresent
+
+  ## The URL prefix at which the container can be accessed. Useful in the case the '-web.external-url' includes a slug
+  ## so that the various internal URLs are still able to access as they are in the default case.
+  ## (Optional)
+  prefixURL: ""
+
+  ## External URL which can access alertmanager
+  baseURL: "http://localhost:9093"
+
+  ## The configuration file name to be loaded to alertmanager
+  ## Must match the key within configuration loaded from ConfigMap/Secret
+  ##
+  configFileName: alertmanager.yml
+
+  persistentVolume:
+    ## If true, alertmanager will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
+    enabled: true
+
+    ## alertmanager data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    accessModes:
+      - ReadWriteOnce
+
+    ## alertmanager data Persistent Volume Claim annotations
+    ##
+    annotations: {}
+
+    ## alertmanager data Persistent Volume existing claim name
+    ## Requires alertmanager.persistentVolume.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+
+    ## alertmanager data Persistent Volume mount root path
+    ##
+    mountPath: /data
+
+    ## alertmanager data Persistent Volume size
+    ##
+    size: 2Gi
+
+    ## Subdirectory of alertmanager data Persistent Volume to mount
+    ## Useful if the volume's root directory is not empty
+    ##
+    subPath: ""
+
+  ## alertmanager resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 10m
+    #   memory: 32Mi
+    # requests:
+    #   cpu: 10m
+    #   memory: 32Mi
+  
+  service:
+    servicePort: 80
+
+## Monitors ConfigMap changes and POSTs to a URL
+## Ref: https://github.com/jimmidyson/configmap-reload
+##
+configmapReload:
+  alertmanager:
+    ## If false, the configmap-reload container will not be deployed
+    ##
+    enabled: true
+
+    ## configmap-reload container image
+    ##
+    image:
+      pullPolicy: IfNotPresent
+
+    ## configmap-reload resource requests and limits
+    ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+    ##
+    resources: {}
+ 
+  server:
+    ## If false, the configmap-reload container will not be deployed
+    ##
+    enabled: true
+
+    ## configmap-reload container image
+    ##
+    image:
+      pullPolicy: IfNotPresent
+
+    ## configmap-reload resource requests and limits
+    ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+    ##
+    resources: {}
+
+meshConfig:
+  enablePrometheusMerge: false
+
+revision: ""

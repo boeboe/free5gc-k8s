@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspen-mesh-secure-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-secure-ingress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app: aspen-mesh-secure-ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aspen-mesh-secure-ingress
+  template:
+    metadata:
+      labels:
+        app: aspen-mesh-secure-ingress
+      annotations:
+        sidecar.istio.io/inject: "false"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9105'
+    spec:
+      serviceAccountName: aspen-mesh-secure-ingress
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+      - command:
+        - "secureingress"
+        - "--listen-http=0.0.0.0:19001"
+        - "--listen-admin=0.0.0.0:9105"
+        - "--validating-webhook"
+{{- if $email := index .Values "lets-encrypt-email" }}
+        - "--lets-encrypt-email={{ $email }}"
+{{- end }}
+        - "--external-dns-annotation={{ .Values.externalDnsAnnotation }}"
+        - "--external-dns={{ .Values.externalDnsEnabled }}"
+        image: {{ template "aspen-mesh-secure-ingress.imagePath" . }}
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        name: aspen-mesh-secure-ingress
+        ports:
+        - containerPort: 19001
+          name: https
+          protocol: TCP
+        env:
+        - name: HELM_CHART_VERSION
+          value: {{ .Chart.Version }}
+        volumeMounts:
+          - name: webhook-certs
+            mountPath: /etc/webhook/certs
+            readOnly: true
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+      - name: webhook-certs
+        secret:
+          secretName: secure-ingress-webhook-certs
+      affinity:
+      {{- include "nodeaffinity" . | indent 6 }}

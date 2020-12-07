@@ -1,0 +1,178 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "cassandra.name" . }}
+  labels:
+    app: {{ template "cassandra.name" . }}
+    chart: {{ template "cassandra.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "cassandra.name" . }}
+      release: {{ .Release.Name }}
+  serviceName: {{ template "cassandra.name" . }}
+  replicas: {{ .Values.config.cluster_size }}
+  podManagementPolicy: {{ .Values.podManagementPolicy }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "cassandra.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      hostNetwork: {{ .Values.hostNetwork }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+      {{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+{{- if .Values.exporter.enabled }}
+      - name: cassandra-exporter
+        image: "{{ .Values.global.hub }}:{{ .Values.exporter.image.repo }}-{{ .Values.exporter.image.tag }}"
+        resources:
+{{ toYaml .Values.exporter.resources | indent 10 }}
+        env:
+          - name: CASSANDRA_EXPORTER_CONFIG_listenPort
+            value: {{ .Values.exporter.port | quote }}
+          - name: JVM_OPTS
+            value: {{ .Values.exporter.jvmOpts | quote }}
+        ports:
+          - name: metrics
+            containerPort: {{ .Values.exporter.port }}
+            protocol: TCP
+          - name: jmx
+            containerPort: 5555
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.exporter.port }}
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.exporter.port }}
+          initialDelaySeconds: 20
+          timeoutSeconds: 45
+{{- end }}
+      - name: {{ template "cassandra.name" . }}
+        image: "{{ .Values.global.hub }}:{{ .Values.image.repo }}-{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        {{- $seed_size := default 1 .Values.config.seed_size | int -}}
+        {{- $global := . }}
+        - name: rpc_address
+          value: localhost
+        - name: CASSANDRA_SEEDS
+          {{- if .Values.hostNetwork }}
+          value: {{ required "You must fill \".Values.config.seeds\" with list of Cassandra seeds when hostNetwork is set to true" .Values.config.seeds | quote }}
+          {{- else }}
+          value: "{{- range $i, $e := until $seed_size }}{{ template "cassandra.name" $global }}-{{ $i }}.{{ template "cassandra.name" $global }}.{{ $global.Release.Namespace }}.svc.{{ $global.Values.config.cluster_domain }}{{- if (lt ( add1 $i ) $seed_size ) }},{{- end }}{{- end }}"
+          {{- end }}
+        - name: MAX_HEAP_SIZE
+          value: {{ default "8192M" .Values.config.max_heap_size | quote }}
+        - name: HEAP_NEWSIZE
+          value: {{ default "200M" .Values.config.heap_new_size | quote }}
+        - name: CASSANDRA_ENDPOINT_SNITCH
+          value: {{ default "SimpleSnitch" .Values.config.endpoint_snitch | quote }}
+        - name: CASSANDRA_CLUSTER_NAME
+          value: {{ default "Cassandra" .Values.config.cluster_name | quote }}
+        - name: CASSANDRA_DC
+          value: {{ default "DC1" .Values.config.dc_name | quote }}
+        - name: CASSANDRA_RACK
+          value: {{ default "RAC1" .Values.config.rack_name | quote }}
+        - name: CASSANDRA_START_RPC
+          value: {{ default "false" .Values.config.start_rpc | quote }}
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command: [ "/bin/sh", "-c", "nodetool status" ]
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        readinessProbe:
+          exec:
+            command: [ "/bin/sh", "-c", "nodetool status | grep -E \"^UN\\s+{{ .Values.readinessProbe.address }}\"" ]
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        ports:
+        - name: intra
+          containerPort: 7000
+        - name: tls
+          containerPort: 7001
+        - name: jmx
+          containerPort: 7199
+        - name: cql
+          containerPort: {{ default 9042 .Values.config.ports.cql }}
+        - name: thrift
+          containerPort: {{ default 9160 .Values.config.ports.thrift }}
+        {{- if .Values.config.ports.agent }}
+        - name: agent
+          containerPort: {{ .Values.config.ports.agent }}
+        {{- end }}
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/cassandra
+        - name: init-db
+          mountPath: /{{ template "cassandra.name" . }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /{{ template "cassandra.name" . }}/init-events.sh
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "exec nodetool decommission"]
+      terminationGracePeriodSeconds: {{ default 30 .Values.podSettings.terminationGracePeriodSeconds }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecrets }}
+      {{- end }}
+      volumes:
+      - name: init-db
+        configMap:
+          name: {{ template "cassandra.name" . }}
+          defaultMode: 0777
+{{- if not .Values.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "cassandra.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size | quote }}
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.persistence.storageClass }}"
+    {{- end }}
+    {{- end }}
+{{- end }}

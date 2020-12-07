@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-aspen-mesh-controlplane
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade,post-rollback
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    app: aspen-mesh-controlplane
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: configure-aspen-mesh-controlplane
+      labels:
+        app: aspen-mesh-controlplane
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: aspen-mesh-controlplane-configurator
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: kubectl
+          image: "{{ .Values.global.hub }}:kubectl-{{.Values.global.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args: [ "/tmp/cert/run.sh", "--namespace", "{{ .Release.Namespace }}" ]
+          volumeMounts:
+            - mountPath: "/tmp/cert"
+              name: tmp-configmap-certs
+      volumes:
+        - name: tmp-configmap-certs
+          configMap:
+            name: aspen-mesh-controlplane-configurator
+      restartPolicy: OnFailure
+

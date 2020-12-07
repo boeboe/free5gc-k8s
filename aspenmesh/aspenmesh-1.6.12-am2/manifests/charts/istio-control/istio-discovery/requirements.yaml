@@ -1,0 +1,28 @@
+dependencies:
+  - name: aspen-mesh-controlplane
+    version: 1.6.12-am2
+    condition: aspen-mesh-controlplane.enabled
+  - name: aspen-mesh-dashboard
+    version: 1.6.12-am2
+    condition: aspen-mesh-dashboard.enabled
+  - name: aspen-mesh-secure-ingress
+    version: 1.6.12-am2
+    condition: aspen-mesh-secure-ingress.enabled
+  - name: traffic-claim-enforcer
+    version: 1.6.12-am2
+    condition: traffic-claim-enforcer.enabled
+  - name: aspen-mesh-metrics-collector
+    version: 1.6.12-am2
+    condition: aspen-mesh-metrics-collector.enabled
+  - name: aspen-mesh-event-storage
+    version: 0.13.4
+    condition: aspen-mesh-event-storage.enabled
+  - name: cert-manager
+    version: v0.12.0
+    condition: cert-manager.enabled
+  - name: external-dns
+    version: 2.16.1
+    condition: external-dns.enabled
+  - name: jaeger
+    version: 0.19.2
+    condition: jaeger.enabled

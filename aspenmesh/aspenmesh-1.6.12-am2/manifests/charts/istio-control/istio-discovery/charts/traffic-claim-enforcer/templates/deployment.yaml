@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-claim-enforcer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: traffic-claim-enforcer
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app: traffic-claim-enforcer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-claim-enforcer
+  template:
+    metadata:
+      labels:
+        app: traffic-claim-enforcer
+      annotations:
+        sidecar.istio.io/inject: "false"
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9093'
+    spec:
+      serviceAccountName: traffic-claim-enforcer-service-account
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+      - command:
+        - tce
+        - -tlsCertFile=/etc/webhook/certs/cert.pem
+        - -tlsKeyFile=/etc/webhook/certs/key.pem
+        - -alsologtostderr
+        - -v=4
+        image: {{ template "traffic-claim-enforcer.imagePath" . }}
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        name: traffic-claim-enforcer
+        ports:
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        env:
+        - name: HELM_CHART_VERSION
+          value: {{ .Chart.Version }}
+        volumeMounts:
+          - name: webhook-certs
+            mountPath: /etc/webhook/certs
+            readOnly: true
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: traffic-claim-enforcer-webhook-certs
+      affinity:
+      {{- include "nodeaffinity" . | indent 6 }}
