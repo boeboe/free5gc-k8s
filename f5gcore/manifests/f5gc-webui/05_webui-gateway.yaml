@@ -2,6 +2,7 @@ apiVersion: policy.aspenmesh.io/v1alpha1
 kind: Application
 metadata:
   name: f5gc-webui
+  namespace: f5gc
 spec:
   inbound:
     ports:
