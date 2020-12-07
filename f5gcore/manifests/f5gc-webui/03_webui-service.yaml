@@ -5,12 +5,12 @@ metadata:
     app: f5gc-webui
   name: f5gc-webui
 spec:
-  type: NodePort
+  #type: NodePort
   ports:
   - name: http-f5gc-webui
     port: 5000
     protocol: TCP
     targetPort: 5000
-    nodePort: 30500
+    #nodePort: 30500
   selector:
     app: f5gc-webui

@@ -7,13 +7,13 @@ metadata:
   name: dbg-mongo-express
   namespace: f5gc
 spec:
-  type: NodePort
+  #type: NodePort
   ports:
   - name: http-mongo-express
     port: 8081
     protocol: TCP
     targetPort: 8081
-    nodePort: 30501
+    #nodePort: 30501
   selector:
     app: dbg-mongo-express
 ---
