@@ -7,7 +7,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: f5gc-nrf
+  - name: http-f5gc-nrf
     port: 29510
     protocol: TCP
     targetPort: 29510

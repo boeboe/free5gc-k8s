@@ -4,4 +4,4 @@ metadata:
   name: f5gc
   labels:
     name: free5gc
-    # istio-injection: enabled
+    istio-injection: enabled

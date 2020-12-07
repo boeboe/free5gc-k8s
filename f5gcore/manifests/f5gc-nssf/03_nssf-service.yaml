@@ -7,7 +7,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: f5gc-nssf
+  - name: http-f5gc-nssf
     port: 29531
     protocol: TCP
     targetPort: 29531

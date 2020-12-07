@@ -8,7 +8,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: f5gc-mongodb
+  - name: mongo-f5gc-mongodb
     port: 27017
     targetPort: 27017
     protocol: TCP

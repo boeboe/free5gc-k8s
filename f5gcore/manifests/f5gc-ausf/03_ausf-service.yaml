@@ -7,7 +7,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: f5gc-ausf
+  - name: http-f5gc-ausf
     port: 29509
     protocol: TCP
     targetPort: 29509

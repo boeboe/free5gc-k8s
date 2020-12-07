@@ -8,7 +8,7 @@ spec:
   # type: ClusterIP
   clusterIP: None
   ports:
-  - name: f5gc-amf
+  - name: http-f5gc-amf
     port: 29518
     protocol: TCP
     targetPort: 29518
