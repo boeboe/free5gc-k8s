@@ -270,3 +270,8 @@ view-all:  ## View all free5gc pods, services and serviceaccounts
 
 exec-gnbsim:  ## Kubectl exec in gnbsim container
 	kubectl -n f5gc exec -it $(kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}) /bin/sh
+
+test-ingress:  ## Test ingress exposed service
+	curl -v -HHost:f5gc-webui.udf-demo.org --resolve f5gc-webui.udf-demo.org:31002:10.1.1.6 https://f5gc-webui.udf-demo.org:31002/
+	curl -v -HHost:mongo-express.udf-demo.org --resolve mongo-express.udf-demo.org:31002:10.1.1.6 https://mongo-express.udf-demo.org:31002/
+	
