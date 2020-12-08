@@ -27,6 +27,7 @@ gateways:
   istio-ingressgateway:
     enabled: true
     type: ClusterIP
+    debug: debug
 
   istio-egressgateway:
     enabled: true
