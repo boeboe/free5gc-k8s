@@ -29,3 +29,17 @@ spec:
         name: f5gc-webui
         namespace: f5gc
 ---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: SecureIngress
+metadata:
+  name: webuibis
+spec:
+  domainName: "f5gc-webui"
+  exposedApplications:
+    - applicationReference:
+        name: f5gc-webui
+        namespace: f5gc
+      serviceReference:
+        name: f5gc-webui
+        namespace: f5gc
+---
