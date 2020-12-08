@@ -20,7 +20,7 @@ kind: SecureIngress
 metadata:
   name: webui
 spec:
-  domainName: "*"
+  domainName: "f5gc-webui.udf-demo.org"
   exposedApplications:
     - applicationReference:
         name: f5gc-webui
