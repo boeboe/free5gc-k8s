@@ -9,4 +9,4 @@ openssl req -x509 -new -nodes -sha512 -days 3650 \
  -subj "/C=BE/ST=Mechelen/L=Hever/O=F5/OU=Presales/CN=${CA_DOMAIN_NAME}" \
  -key ${CA_CERT_DIR}/ca.key \
  -out ${CA_CERT_DIR}/ca.crt
-
+openssl pkcs12 -export -out ${CA_CERT_DIR}/ca.pfx -inkey ${CA_CERT_DIR}/ca.key -in ${CA_CERT_DIR}/ca.crt
