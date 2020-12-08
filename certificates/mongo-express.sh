@@ -39,6 +39,4 @@ openssl x509 -req -sha512 -days 3650 \
     -out ${MONGO_EXPRESS_CERT_DIR}/mongo-express.crt
     
 openssl x509 -inform PEM -in ${MONGO_EXPRESS_CERT_DIR}/mongo-express.crt -out ${MONGO_EXPRESS_CERT_DIR}/mongo-express.cert
-
-
-
+openssl pkcs12 -export -out ${MONGO_EXPRESS_CERT_DIR}/mongo-express.pfx -inkey ${MONGO_EXPRESS_CERT_DIR}/mongo-express.key -in ${MONGO_EXPRESS_CERT_DIR}/mongo-express.crt

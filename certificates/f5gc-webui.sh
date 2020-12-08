@@ -39,6 +39,4 @@ openssl x509 -req -sha512 -days 3650 \
     -out ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.crt
     
 openssl x509 -inform PEM -in ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.crt -out ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.cert
-
-
-
+openssl pkcs12 -export -out ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.pfx -inkey ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.key -in ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.crt

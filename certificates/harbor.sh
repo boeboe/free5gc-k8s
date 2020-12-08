@@ -35,6 +35,4 @@ openssl x509 -req -sha512 -days 3650 \
     -out ${HARBOR_CERT_DIR}/harbor.crt
     
 openssl x509 -inform PEM -in ${HARBOR_CERT_DIR}/harbor.crt -out ${HARBOR_CERT_DIR}/harbor.cert
-
-
-
+openssl pkcs12 -export -out ${HARBOR_CERT_DIR}/harbor.pfx -inkey ${HARBOR_CERT_DIR}/harbor.key -in ${HARBOR_CERT_DIR}/harbor.crt

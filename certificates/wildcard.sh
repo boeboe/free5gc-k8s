@@ -44,6 +44,4 @@ openssl x509 -req -sha512 -days 3650 \
     -out ${WILDCARD_CERT_DIR}/wildcard.crt
     
 openssl x509 -inform PEM -in ${WILDCARD_CERT_DIR}/wildcard.crt -out ${WILDCARD_CERT_DIR}/wildcard.cert
-
-
-
+openssl pkcs12 -export -out ${WILDCARD_CERT_DIR}/wildcard.pfx -inkey ${WILDCARD_CERT_DIR}/wildcard.key -in ${WILDCARD_CERT_DIR}/wildcard.crt
