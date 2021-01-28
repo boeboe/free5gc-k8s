@@ -267,6 +267,8 @@ view-all:  ## View all free5gc pods, services and serviceaccounts
 	kubectl get serviceaccounts -n f5gc -o wide 
 	kubectl get services -n f5gc -o wide 
 	kubectl get pods -n f5gc -o wide 
+	kubectl get applications -n f5gc -o wide
+	kubectl get secureingress -n f5gc -o wide
 
 exec-gnbsim:  ## Kubectl exec in gnbsim container
 	kubectl -n f5gc exec -it $(kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}) /bin/sh
