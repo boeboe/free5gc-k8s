@@ -158,7 +158,7 @@ data:
           "TAC" : "0x000001"
         }
       },
-      "GTPuAddr" : "192.168.10.11",
+      "GTPuAddr" : "192.168.10.10",
       "GTPuIFname" : "net2",
       "GTPuTEID" : 2
     }
@@ -233,7 +233,7 @@ data:
           "TAC" : "0x000001"
         }
       },
-      "GTPuAddr" : "192.168.10.12",
+      "GTPuAddr" : "192.168.10.10",
       "GTPuIFname" : "net2",
       "GTPuTEID" : 2
     }
@@ -308,7 +308,7 @@ data:
           "TAC" : "0x000001"
         }
       },
-      "GTPuAddr" : "192.168.10.13",
+      "GTPuAddr" : "192.168.10.10",
       "GTPuIFname" : "net2",
       "GTPuTEID" : 2
     }
@@ -383,7 +383,7 @@ data:
           "TAC" : "0x000001"
         }
       },
-      "GTPuAddr" : "192.168.10.14",
+      "GTPuAddr" : "192.168.10.10",
       "GTPuIFname" : "net2",
       "GTPuTEID" : 2
     }
