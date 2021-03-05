@@ -15,13 +15,13 @@ F5GC_WEBUI_NAME		 			?= f5gc-webui
 # With or without debug tools
 ifeq ($(DEBUG), true)
 DOCKER_ENV          ?= DOCKER_BUILDKIT=1
-DOCKER_TAG          ?= v3.0.4-dbg
+DOCKER_TAG          ?= v3.0.5-dbg
 DOCKER_USER       	?= boeboe
 DEBUG_TOOL_LIST     ?= vim strace net-tools curl netcat-openbsd bash tree tcpdump wget httpie bind-tools iproute2
 DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=true --build-arg DEBUG_TOOL_LIST="${DEBUG_TOOL_LIST}"
 else
 DOCKER_ENV          ?= DOCKER_BUILDKIT=1
-DOCKER_TAG          ?= v3.0.4
+DOCKER_TAG          ?= v3.0.5
 DOCKER_USER       	?= boeboe
 DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=false
 endif

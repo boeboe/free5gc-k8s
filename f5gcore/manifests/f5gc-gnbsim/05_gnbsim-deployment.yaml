@@ -37,7 +37,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-gnbsim
-          image: boeboe/f5gc-gnbsim:v3.0.4
+          image: boeboe/f5gc-gnbsim:v3.0.5
           imagePullPolicy: Always
           command: ["sh"]
           tty: true
@@ -130,7 +130,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-gnbsim
-          image: boeboe/f5gc-gnbsim:v3.0.4
+          image: boeboe/f5gc-gnbsim:v3.0.5
           imagePullPolicy: Always
           command: ["sh"]
           tty: true
@@ -223,7 +223,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-gnbsim
-          image: boeboe/f5gc-gnbsim:v3.0.4
+          image: boeboe/f5gc-gnbsim:v3.0.5
           imagePullPolicy: Always
           command: ["sh"]
           tty: true
@@ -316,7 +316,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-gnbsim
-          image: boeboe/f5gc-gnbsim:v3.0.4
+          image: boeboe/f5gc-gnbsim:v3.0.5
           imagePullPolicy: Always
           command: ["sh"]
           tty: true
@@ -409,7 +409,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-gnbsim
-          image: boeboe/f5gc-gnbsim:v3.0.4
+          image: boeboe/f5gc-gnbsim:v3.0.5
           imagePullPolicy: Always
           command: ["sh"]
           tty: true

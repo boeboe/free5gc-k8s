@@ -57,6 +57,34 @@ data:
       ue_subnet: 172.16.1.0/24
       nrfUri: http://f5gc-nrf:29510
 
+    db_uri: mongodb://f5gc-mongodb:27017/free5GC
+
+    # the kind of log output
+      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: enable the caller report or not, value: true or false
+    logger:
+      SMF:
+        debugLevel: debug
+        ReportCaller: false
+      NAS:
+        debugLevel: info
+        ReportCaller: false
+      NGAP:
+        debugLevel: info
+        ReportCaller: false
+      Aper:
+        debugLevel: info
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
+      OpenApi:
+        debugLevel: info
+        ReportCaller: false
+      PFCP:
+        debugLevel: info
+        ReportCaller: false
+
   uerouting.yaml: |
     info:
       version: 1.0.0
@@ -103,75 +131,3 @@ data:
     #       - pfdID: pfd1
     #         flowDescriptions:
     #           - permit out ip from 60.60.0.1 8080 to any
-
-  free5GC.conf: |
-    db_uri: mongodb://f5gc-mongodb:27017/free5GC
-    #all logging levels
-    #panic
-    #fatal
-    #error
-    #warn
-    #info
-    #debug
-    #trace
-    logger:
-    # network function
-      AMF:
-        debugLevel: info
-        ReportCaller: true
-      SMF:
-        debugLevel: trace
-        ReportCaller: true
-      UDR:
-        debugLevel: info
-        ReportCaller: true
-      UDM:
-        debugLevel: info
-        ReportCaller: true
-      NRF:
-        debugLevel: info
-        ReportCaller: true
-      PCF:
-        debugLevel: info
-        ReportCaller: true
-      AUSF:
-        debugLevel: info
-        ReportCaller: true
-      N3IWF:
-        debugLevel: info
-        ReportCaller: true
-    # library
-      NAS:
-        debugLevel: info
-        ReportCaller: true
-      FSM:
-        debugLevel: info
-        ReportCaller: true
-      NGAP:
-        debugLevel: info
-        ReportCaller: true
-      NamfComm:
-        debugLevel: info
-        ReportCaller: true
-      NamfEventExposure:
-        debugLevel: info
-        ReportCaller: true
-      NsmfPDUSession:
-        debugLevel: info
-        ReportCaller: true
-      NudrDataRepository:
-        debugLevel: info
-        ReportCaller: true
-      OpenApi:
-        debugLevel: debug
-        ReportCaller: true
-      Aper:
-        debugLevel: info
-        ReportCaller: true
-      CommonConsumerTest:
-        debugLevel: info
-        ReportCaller: true
-    # webui
-      WEBUI:
-        debugLevel: info
-        ReportCaller: true
