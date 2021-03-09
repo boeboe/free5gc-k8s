@@ -13,7 +13,7 @@ spec:
   - name: query
     port: 80
     protocol: TCP
-    targetPort: query
+    targetPort: tcp-query
     nodePort: 30004
   selector:
     app.kubernetes.io/component: query

@@ -2,8 +2,6 @@
 
 ASPEN_NAMESPACE=istio-system
 ASPEN_VERSION=1.6.14-am4
-# ASPEN_VERSION=1.6.14-am2
-# ASPEN_VERSION=1.6.12-am3
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-${ASPEN_VERSION}/manifests/charts
 CERT_DIR=./aspenmesh-${ASPEN_VERSION}/samples/certs
