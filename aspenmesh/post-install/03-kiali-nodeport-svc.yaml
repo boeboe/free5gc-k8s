@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kiali.io/api-spec: https://kiali.io/api
+    kiali.io/api-type: rest
+  labels:
+    app: kiali
+    app.kubernetes.io/instance: kiali-server
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kiali
+    app.kubernetes.io/part-of: kiali
+    app.kubernetes.io/version: v1.30.0
+    version: v1.30.0
+  name: kiali
+  namespace: istio-system
+spec:
+  ports:
+  - name: http
+    port: 20001
+    protocol: TCP
+    targetPort: 20001
+    nodePort: 30003
+  selector:
+    app.kubernetes.io/instance: kiali-server
+    app.kubernetes.io/name: kiali
+  sessionAffinity: None
+  type: NodePort

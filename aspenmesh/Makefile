@@ -60,7 +60,10 @@ istioctl:  ## Install istioctl
 	sudo cp ~/.istioctl/bin/istioctl /usr/local/bin
 
 post-install:  ## Post installation steps
+	helm install --namespace istio-system --set auth.strategy="anonymous" --repo https://kiali.org/helm-charts kiali-server kiali-server
 	kubectl apply -f ./post-install/
 
 post-uninstall:  ## Post uninstallation steps
+	helm uninstall --namespace istio-system kiali-server
+	kubectl delete crd monitoringdashboards.monitoring.kiali.io
 	kubectl delete -f ./post-install/
