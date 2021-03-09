@@ -1,0 +1,4 @@
+Thank you for installing Aspen Mesh {{ .Release.version }}
+
+Your release is named {{ .Release.Name }}
+

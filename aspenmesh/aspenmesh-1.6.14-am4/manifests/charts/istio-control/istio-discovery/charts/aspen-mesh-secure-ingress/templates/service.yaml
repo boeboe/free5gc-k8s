@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspen-mesh-secure-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-secure-ingress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 19001
+  selector:
+    app: aspen-mesh-secure-ingress

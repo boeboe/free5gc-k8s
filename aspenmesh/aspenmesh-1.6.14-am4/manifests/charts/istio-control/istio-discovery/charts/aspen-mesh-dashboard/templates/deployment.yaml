@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspen-mesh-dashboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-dashboard
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: aspen-mesh-dashboard
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: aspen-mesh-dashboard
+    spec:
+      serviceAccountName: aspen-mesh-dashboard
+{{- if .Values.global.priorityClassName }}
+      priorityClassName: "{{ .Values.global.priorityClassName }}"
+{{- end }}
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: dashboard
+          image: {{ template "aspen-mesh-dashboard.imagePath" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: HELM_CHART_VERSION
+              value: {{ .Chart.Version }}
+          resources:
+{{- if .Values.resources }}
+{{ toYaml .Values.resources | indent 12 }}
+{{- end }}
+      affinity:
+        {{- include "nodeaffinity" . | indent 6 }}
+        {{- include "podAntiAffinity" . | indent 6 }}

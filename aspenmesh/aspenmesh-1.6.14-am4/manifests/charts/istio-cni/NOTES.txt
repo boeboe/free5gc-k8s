@@ -1,0 +1,1 @@
+Installs Aspen Mesh {{ .Release.version }} for use on CNI enabled clusters (e.g. OpenShift).
