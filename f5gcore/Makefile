@@ -263,6 +263,8 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete secret f5gc-f5gcwebui --namespace istio-system || true
 	kubectl delete -f ${K8S_DEPLOY_DIR}/00_namespace.yaml || true
 
+redeploy: undeploy deploy ## Redeploy F5GCore Components
+
 view-all:  ## View all free5gc pods, services and serviceaccounts
 	kubectl get serviceaccounts -n f5gc -o wide 
 	kubectl get services -n f5gc -o wide 
