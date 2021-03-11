@@ -35,6 +35,10 @@ gateways:
       # Needed to route traffic via egress gateway if desired.
       ISTIO_META_REQUESTED_NETWORK_VIEW: "external"
 
+global:
+  proxy:
+    accessLogEncoding: JSON
+
 prometheus:
   enabled: true
 
