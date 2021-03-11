@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:
+    app: aspen-mesh-alertmanager
+    chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: aspen-mesh-alertmanager-{{ .Release.Namespace }}
+rules:
+  []

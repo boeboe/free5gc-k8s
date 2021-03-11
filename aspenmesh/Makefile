@@ -3,10 +3,13 @@
 ASPEN_NAMESPACE=istio-system
 ASPEN_VERSION=1.6.14-am4
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
-CHART_DIR=./aspenmesh-${ASPEN_VERSION}/manifests/charts
-CERT_DIR=./aspenmesh-${ASPEN_VERSION}/samples/certs
+CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/manifests/charts
+CERT_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/samples/certs
 
 ISTIO_VERSION=1.6.14
+
+ANALYSIS_EMULATOR_NAMESPACE=analysis-emulator
+ANALYSIS_EMULATOR_CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/samples/aspenmesh/analysis-emulator
 
 HELM_ARGS=
 # HELM_ARGS=--debug
@@ -65,3 +68,15 @@ post-uninstall:  ## Post uninstallation steps
 	helm uninstall --namespace istio-system kiali-server
 	kubectl delete crd monitoringdashboards.monitoring.kiali.io
 	kubectl delete -f ./post-install/
+
+install-analysis-emulator:  ## Install aspen mesh packet capture analysis emulator
+	kubectl create ns ${ANALYSIS_EMULATOR_NAMESPACE}
+	kubectl label --overwrite ns ${ANALYSIS_EMULATOR_NAMESPACE} ca.istio.io/override=true
+	helm install analysis-emulator --namespace ${ANALYSIS_EMULATOR_NAMESPACE} ${ANALYSIS_EMULATOR_CHART_DIR}
+
+upgrade-analysis-emulator:  ## Upgrade aspen mesh packet capture analysis emulator
+	helm upgrade analysis-emulator --namespace ${ANALYSIS_EMULATOR_NAMESPACE} ${ANALYSIS_EMULATOR_CHART_DIR}
+
+uninstall-analysis-emulator:  ## Uninstall aspen mesh packet capture analysis emulator
+	helm uninstall analysis-emulator --namespace ${ANALYSIS_EMULATOR_NAMESPACE} || true
+	kubectl delete ns analysis-emulator

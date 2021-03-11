@@ -1,0 +1,46 @@
+kind: CustomResourceDefinition
+apiVersion: apiextensions.k8s.io/v1beta1
+metadata:
+  name: secureingresses.policy.aspenmesh.io
+spec:
+  group: policy.aspenmesh.io
+  version: v1alpha1
+  names:
+    kind: SecureIngress
+    plural: secureingresses
+    singular: secureingress
+    listKind: SecureIngressList
+    shortNames:
+    - si
+  scope: Namespaced
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+  - JSONPath: .spec.domainName
+    description: DomainName is the host name that is exposed by the ingress gateway
+    name: Domain
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    description: |-
+      CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.
+      Populated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+    name: Age
+    type: date
+
+---
+kind: CustomResourceDefinition
+apiVersion: apiextensions.k8s.io/v1beta1
+metadata:
+  name: applications.policy.aspenmesh.io
+spec:
+  group: policy.aspenmesh.io
+  version: v1alpha1
+  names:
+    kind: Application
+    plural: applications
+    singular: application
+    listKind: ApplicationList
+    shortNames:
+    - app
+    - apps
+  scope: Namespaced

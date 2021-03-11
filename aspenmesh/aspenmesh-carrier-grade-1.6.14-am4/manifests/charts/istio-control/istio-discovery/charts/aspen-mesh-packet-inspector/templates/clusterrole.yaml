@@ -1,0 +1,13 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: aspen-mesh-packet-inspector-filter-deployer
+  labels:
+    app: aspen-mesh-packet-inspector-filter-deployer
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+rules:
+- apiGroups: ["networking.istio.io"]
+  resources: ["envoyfilters"]
+  verbs: [ "list", "get", "create", "update", "patch"]

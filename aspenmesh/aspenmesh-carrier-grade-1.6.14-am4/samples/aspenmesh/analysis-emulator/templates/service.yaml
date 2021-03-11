@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspen-mesh-analysis-emulator 
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-analysis-emulator
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+  ports:
+  - port: 21000
+    name: http
+    targetPort: 21000
+  selector:
+    app: analysis-emulator

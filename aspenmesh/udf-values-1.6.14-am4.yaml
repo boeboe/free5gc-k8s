@@ -13,7 +13,12 @@ aspen-mesh-controlplane:
       redirectUrl: https://YOUR_DOMAIN/login
       # (Optional) - A comma delimited list of claims used for validating JWTs. Example "aud=aspenmesh.io,role=k8s.admin". Defaults to "aud=aspenmesh.io"
       #claims: aud=aspenmesh:io,role=k8s:admin
-  
+
+aspen-mesh-packet-inspector:
+   enabled: true
+   analysis:
+     address: analysis-emulator.analysis-emulator:21000
+
 aspen-mesh-secure-ingress:
   # enabled by default, which is highly recommended.
   enabled: true
@@ -22,7 +27,10 @@ aspen-mesh-secure-ingress:
   lets-encrypt-email: ""
   # Enable external-dns management for Secure Ingress resources
   externalDnsEnabled: false
-  
+
+citadel:
+   enabled: true
+
 gateways:
   istio-ingressgateway:
     enabled: true
@@ -36,6 +44,7 @@ gateways:
       ISTIO_META_REQUESTED_NETWORK_VIEW: "external"
 
 global:
+  certificateCustomFields: true
   proxy:
     accessLogEncoding: JSON
 
