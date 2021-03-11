@@ -56,6 +56,7 @@ spec:
           name: capture-folder
           readOnly: false
       - image: webshark/webshark:devel
+        imagePullPolicy: Always
         name: webshark
         ports:
         - containerPort: 80
@@ -69,6 +70,7 @@ spec:
           name: capture-folder
           readOnly: true
       - image: boeboe/wetty-bson-decode:1.0.0
+        imagePullPolicy: Always
         name: wetty-bson
         ports:
         - containerPort: 3000
