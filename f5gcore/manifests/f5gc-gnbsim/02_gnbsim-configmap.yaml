@@ -65,7 +65,7 @@ data:
           "sd": "010203"
         },
         "dnn": "internet",
-        "url": "http://192.168.10.20:8080/"
+        "url": "http://localhost"
       },
       "ULInfoNR": {
         "NRCGI": {
@@ -84,7 +84,7 @@ data:
         }
       },
       "NGAPPeerAddr": "172.16.10.20",
-      "GTPuLocalAddr": "172.16.10.10",
+      "GTPuLocalAddr": "192.168.10.10",
       "GTPuIFname": "net2"
     }
 
