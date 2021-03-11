@@ -17,7 +17,7 @@ aspen-mesh-controlplane:
 aspen-mesh-packet-inspector:
    enabled: true
    analysis:
-     address: analysis-emulator.analysis-emulator:21000
+     address: aspen-mesh-analysis-emulator.analysis-emulator:21000
 
 aspen-mesh-secure-ingress:
   # enabled by default, which is highly recommended.
