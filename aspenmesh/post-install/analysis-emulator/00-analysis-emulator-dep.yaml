@@ -71,6 +71,9 @@ spec:
           readOnly: true
       - image: boeboe/wetty-bson-decode:1.0.0
         imagePullPolicy: Always
+        env:
+          - name: BASE
+            value: "/"
         name: wetty-bson
         ports:
         - containerPort: 3000
