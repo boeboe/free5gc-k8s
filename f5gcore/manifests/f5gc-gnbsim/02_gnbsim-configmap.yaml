@@ -83,9 +83,9 @@ data:
           "TAC": "0x000001"
         }
       },
-      "NGAPPeerAddr": "172.16.10.20",
-      "GTPuLocalAddr": "192.168.10.10",
-      "GTPuIFname": "net2"
+      "GTPuAddr" : "192.168.10.10",
+      "GTPuIFname" : "net2",
+      "GTPuTEID" : 2
     }
 
 ---
