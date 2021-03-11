@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aspen-mesh-analysis-emulator
+    app.kubernetes.io/managed-by: Helm
+    chart: analysis-emulator-0.1.0
+    heritage: Helm
+    release: analysis-emulator
+  name: webshark-np
+  namespace: analysis-emulator
+spec:
+  ports:
+  - name: webshark
+    port: 30005
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: analysis-emulator
+  sessionAffinity: None
+  type: NodePort
