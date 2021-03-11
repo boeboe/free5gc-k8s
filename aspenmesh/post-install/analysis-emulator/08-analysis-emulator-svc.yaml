@@ -7,7 +7,7 @@ metadata:
     chart: analysis-emulator-0.1.0
     heritage: Helm
     release: analysis-emulator
-  name: webshark-np
+  name: webshark-wetty-np
   namespace: analysis-emulator
 spec:
   ports:
@@ -16,6 +16,11 @@ spec:
     protocol: TCP
     targetPort: webshark
     nodePort: 30008
+  - name: wetty-bson
+    port: 30009
+    protocol: TCP
+    targetPort: wetty-bson
+    nodePort: 30009
   selector:
     app: analysis-emulator
   sessionAffinity: None
