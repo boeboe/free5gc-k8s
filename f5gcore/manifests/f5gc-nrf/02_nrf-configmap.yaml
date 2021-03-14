@@ -1,46 +1,42 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: f5gc-nrf-config
 data:
-
   nrfcfg.conf: |
     info:
       version: 1.0.0
       description: NRF initial local configuration
     
     configuration:
-      MongoDBName: free5gc
-      MongoDBUrl: mongodb://f5gc-mongodb:27017
-      DefaultServiceIP: f5gc-nrf
-      sbi:
-        scheme: http
-        registerIPv4: f5gc-nrf
-        bindingIPv4: 0.0.0.0
-        port: 29510
+      MongoDBName: free5gc                        # database name in MongoDB
+      MongoDBUrl: mongodb://f5gc-mongodb:27017    # a valid URL of the mongodb
+      sbi: # Service-based interface information
+        scheme: http              # the protocol for sbi (http or https)
+        registerIPv4: f5gc-nrf    # IP/DNS used to serve NFs or register to another NRF
+        bindingIPv4: 0.0.0.0      # IP used to bind the service
+        port: 29510               # port used to bind the service
       DefaultPlmnId:
-        mcc: "208"
-        mnc: "93"
+        mcc: "208"                # Mobile Country Code (3 digits string, digit: 0~9)
+        mnc: "93"                 # Mobile Network Code (2 or 3 digits string, digit: 0~9)
       serviceNameList:
-        - nnrf-nfm
-        - nnrf-disc
-      nrfUri: http://f5gc-nrf:29510
-
-    db_uri: mongodb://f5gc-mongodb:27017/free5GC
+        - nnrf-nfm                # Nnrf_NFManagement service
+        - nnrf-disc               # Nnrf_NFDiscovery service
     
     # the kind of log output
-      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
-      # ReportCaller: enable the caller report or not, value: true or false
+      # debugLevel: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: true or false
     logger:
       NRF:
         debugLevel: trace
         ReportCaller: true
       PathUtil:
         debugLevel: trace
-        ReportCaller: false
+        ReportCaller: true
       OpenApi:
         debugLevel: trace
-        ReportCaller: false
+        ReportCaller: true
       MongoDBLibrary:
         debugLevel: trace
         ReportCaller: true

@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,6 +10,6 @@ data:
       description: WebUI initial local configuration
     
     configuration:
-      mongodb:
-        name: free5gc
-        url: mongodb://f5gc-mongodb:27017
+      mongodb: # the mongodb connected by this webui
+        name: free5gc                       # name of the mongodb
+        url: mongodb://f5gc-mongodb:27017   # a valid URL of the mongodb

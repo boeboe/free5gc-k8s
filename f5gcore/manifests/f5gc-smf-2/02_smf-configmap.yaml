@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,66 +7,78 @@ data:
   smfcfg.conf: |
     info:
       version: 1.0.0
-      description: AMF initial local configuration
+      description: SMF initial local configuration
     
     configuration:
-      smfName: SMF2
-      sbi:
-        scheme: http
-        registerIPv4: f5gc-smf-2
-        bindingIPv4: 0.0.0.0 
-        port: 29502
-        tls:
-          key: free5gc/support/TLS/smf.key
-          pem: free5gc/support/TLS/smf.pem
-      serviceNameList:
-        - nsmf-pdusession
-        - nsmf-event-exposure
-      snssai_info:
-        # - sNssai:
-        #     sst: 1
-        #     sd: 010203
-        #   dnnSmfInfoList:
-        #     - dnn: internet
-        - sNssai:
-            sst: 1
-            sd: 112233
-          dnnSmfInfoList:
-            - dnn: internet
-      pfcp:
+      smfName: SMF2 # the name of this SMF
+      sbi: # Service-based interface information
+        scheme: http              # the protocol for sbi (http or https)
+        registerIPv4: f5gc-smf-2  # IP used to register to NRF
+        bindingIPv4: 0.0.0.0      # IP used to bind the service
+        port: 29502               # Port used to bind the service
+        tls: # the local path of TLS key 
+          key: free5gc/support/TLS/smf.key  # SMF TLS Certificate
+          pem: free5gc/support/TLS/smf.pem  # SMF TLS Private key
+      serviceNameList: # the SBI services provided by this SMF, refer to TS 29.502
+        - nsmf-pdusession       # Nsmf_PDUSession service
+        - nsmf-event-exposure   # Nsmf_EventExposure service
+        - nsmf-oam              # OAM service
+      snssaiInfos: # the S-NSSAI (Single Network Slice Selection Assistance Information) list supported by this AMF
+        # - sNssai: # S-NSSAI (Single Network Slice Selection Assistance Information)
+        #     sst: 1      # Slice/Service Type (uinteger, range: 0~255)
+        #     sd: 010203  # Slice Differentiator (3 bytes hex string, range: 000000~FFFFFF)
+        #   dnnInfos: # DNN information list
+        #     - dnn: internet # Data Network Name
+        #       dns:          # the IP address of DNS
+        #         ipv4: 8.8.8.8
+        #         ipv6: 2001:4860:4860::8888
+        #       ueSubnet: 60.60.0.0/16 # should be CIDR type
+        - sNssai: # S-NSSAI (Single Network Slice Selection Assistance Information)
+            sst: 1      # Slice/Service Type (uinteger, range: 0~255)
+            sd: 112233  # Slice Differentiator (3 bytes hex string, range: 000000~FFFFFF)
+          dnnInfos: # DNN information list
+            - dnn: internet # Data Network Name
+              dns:          # the IP address of DNS
+                ipv4: 8.8.8.8
+                ipv6: 2001:4860:4860::8888
+              ueSubnet: 60.61.0.0/16 # should be CIDR type
+      pfcp: # the IP address of N4 interface on this SMF (PFCP)
         addr: 172.16.30.21
-      userplane_information:
-        up_nodes:
-          gNB1:
-            type: AN
-            an_ip: 192.168.10.10
-          UPF2:
-            type: UPF
-            node_id: 172.16.30.31
-        links:
+      userplane_information: # list of userplane information
+        up_nodes: # information of userplane node (AN or UPF)
+          gNB1: # the name of the node
+            type: AN  # the type of the node (AN or UPF)
+          UPF2: # the name of the node
+            type: UPF # the type of the node (AN or UPF)
+            node_id: 172.16.30.31 # the IP/FQDN of N4 interface on this UPF (PFCP)
+            sNssaiUpfInfos: # S-NSSAI information list for this UPF
+              # - sNssai: # S-NSSAI (Single Network Slice Selection Assistance Information)
+              #     sst: 1      # Slice/Service Type (uinteger, range: 0~255)
+              #     sd: 010203  # Slice Differentiator (3 bytes hex string, range: 000000~FFFFFF)
+              #   dnnUpfInfoList: # DNN information list for this S-NSSAI
+              #     - dnn: internet
+              - sNssai: # S-NSSAI (Single Network Slice Selection Assistance Information)
+                  sst: 1      # Slice/Service Type (uinteger, range: 0~255)
+                  sd: 112233  # Slice Differentiator (3 bytes hex string, range: 000000~FFFFFF)
+                dnnUpfInfoList: # DNN information list for this S-NSSAI
+                  - dnn: internet
+            interfaces: # Interface list for this UPF
+              - interfaceType: N3 # the type of the interface (N3 or N9)
+                endpoints: # the IP address of this N3/N9 interface on this UPF
+                  - 192.168.10.21
+                networkInstance: internet # Data Network Name (DNN)
+        links: # the topology graph of userplane, A and B represent the two nodes of each link
           - A: gNB1
             B: UPF2
-      dnn:
-        internet:
-          dns:
-            ipv4: 8.8.8.8
-            ipv6: 2001:4860:4860::8888
-        internet2:
-          dns:
-            ipv4: 8.8.4.4
-            ipv6: 2001:4860:4860::8844
-      ue_subnet: 172.16.1.0/24
       nrfUri: http://f5gc-nrf:29510
 
-    db_uri: mongodb://f5gc-mongodb:27017/free5GC
-
     # the kind of log output
-      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
-      # ReportCaller: enable the caller report or not, value: true or false
+      # debugLevel: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: true or false
     logger:
       SMF:
-        debugLevel: debug
-        ReportCaller: false
+        debugLevel: trace
+        ReportCaller: true
       NAS:
         debugLevel: info
         ReportCaller: false
@@ -79,54 +92,48 @@ data:
         debugLevel: info
         ReportCaller: false
       OpenApi:
-        debugLevel: info
-        ReportCaller: false
+        debugLevel: debug
+        ReportCaller: true
       PFCP:
-        debugLevel: info
-        ReportCaller: false
+        debugLevel: trace
+        ReportCaller: true
 
   uerouting.yaml: |
     info:
       version: 1.0.0
       description: Routing information for UE
     
-    ueRoutingInfo:
-      - SUPI: imsi-2089300007487
-        AN: 10.200.200.101
-        PathList:
-          - DestinationIP: 60.60.0.101
-            DestinationPort: 8888
+    ueRoutingInfo: # the list of UE routing information
+      - SUPI: imsi-2089300007487  # Subscription Permanent Identifier of the UE
+        AN: 10.200.200.101        # the IP address of RAN
+        PathList:                 # the pre-config paths for this SUPI
+          - DestinationIP: 60.60.0.101  # the destination IP address on Data Network (DN)
+            # the order of UPF nodes in this path. We use the UPF's name to represent each UPF node.
+            # The UPF's name should be consistent with smfcfg.yaml
             UPF: !!seq
               - BranchingUPF
               - AnchorUPF1
-    
-          - DestinationIP: 60.60.0.103
-            DestinationPort: 9999
+
+          - DestinationIP: 60.60.0.103 # the destination IP address on Data Network (DN)
+            # the order of UPF nodes in this path. We use the UPF's name to represent each UPF node.
+            # The UPF's name should be consistent with smfcfg.yaml
             UPF: !!seq
               - BranchingUPF
               - AnchorUPF2
-    
-      - SUPI: imsi-2089300007486
-        AN: 10.200.200.102
-        PathList:
-          - DestinationIP: 10.0.0.10
-            DestinationPort: 8888
+
+      - SUPI: imsi-2089300007486  # Subscription Permanent Identifier of the UE
+        AN: 10.200.200.102        # the IP address of RAN
+        PathList:                 # the pre-config paths for this SUPI
+          - DestinationIP: 10.0.0.10  # the destination IP address on Data Network (DN)
+            # the order of UPF nodes in this path. We use the UPF's name to represent each UPF node.
+            # The UPF's name should be consistent with smfcfg.yaml
             UPF: !!seq
               - BranchingUPF
               - AnchorUPF1
-    
-          - DestinationIP: 10.0.0.11
-            DestinationPort: 9999
+
+          - DestinationIP: 10.0.0.11 # the destination IP address on Data Network (DN)
+            # the order of UPF nodes in this path. We use the UPF's name to represent each UPF node.
+            # The UPF's name should be consistent with smfcfg.yaml
             UPF: !!seq
               - BranchingUPF
               - AnchorUPF2
-    # routeProfile:
-    #   MEC1:
-    #     forwardingPolicyID: 10
-    # 
-    # pfdDataForApp:
-    #   - applicationId: edge
-    #     pfds:
-    #       - pfdID: pfd1
-    #         flowDescriptions:
-    #           - permit out ip from 60.60.0.1 8080 to any

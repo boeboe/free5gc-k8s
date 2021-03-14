@@ -1,3 +1,4 @@
+---
 apiVersion: policy.aspenmesh.io/v1alpha1
 kind: Application
 metadata:
@@ -27,4 +28,3 @@ spec:
       serviceReference:
         name: f5gc-webui
         namespace: f5gc
----

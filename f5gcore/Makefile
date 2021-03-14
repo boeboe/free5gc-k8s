@@ -275,27 +275,11 @@ view-all:  ## View all free5gc pods, services and serviceaccounts
 	kubectl get applications -n f5gc -o wide
 	kubectl get secureingress -n f5gc -o wide
 
-exec-gnbsim-00:  ## Kubectl exec in gnbsim container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-00 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
-exec-gnbsim-01:  ## Kubectl exec in gnbsim container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-01 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
-exec-gnbsim-02:  ## Kubectl exec in gnbsim container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-02 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
-exec-gnbsim-03:  ## Kubectl exec in gnbsim container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-03 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
-exec-gnbsim-04:  ## Kubectl exec in gnbsim container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-04 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
+exec-gnbsim:  ## Kubectl exec in gnbsim container for bash console
+	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
 
-test-gnbsim-00:  ## Kubectl exec in gnbsim container for load test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-00 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
-test-gnbsim-01:  ## Kubectl exec in gnbsim container for load test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-01 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
-test-gnbsim-02:  ## Kubectl exec in gnbsim container for load test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-02 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
-test-gnbsim-03:  ## Kubectl exec in gnbsim container for load test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-03 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
-test-gnbsim-04:  ## Kubectl exec in gnbsim container for load test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-04 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
+test-gnbsim:  ## Kubectl exec in gnbsim container for load test
+	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
 
 test-ingress:  ## Test ingress exposed service
 	curl -v -HHost:f5gc-webui.udf-demo.org --resolve f5gc-webui.udf-demo.org:31002:10.1.1.6 https://f5gc-webui.udf-demo.org:31002/

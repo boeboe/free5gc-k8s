@@ -2,9 +2,10 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition 
 metadata:
-  name: f5gc-gnbsim-n1n2-00
+  name: f5gc-gnbsim-n1n2
 spec:
-  config: '{ 
+  config: |
+    { 
       "cniVersion": "0.3.1",
       "type": "macvlan",
       "master": "ens6",
@@ -12,21 +13,22 @@ spec:
       "ipam": {
         "type": "static",
         "addresses": [
-                {
-                        "address": "172.16.10.10/24",
-                        "gateway": "172.16.10.1"
-                }
+          {
+            "address": "172.16.10.10/24",
+            "gateway": "172.16.10.1"
+          }
         ]
       }
-    }'
+    }
 
 ---
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: f5gc-gnbsim-n3-00
+  name: f5gc-gnbsim-n3
 spec:
-  config: '{
+  config: |
+    {
       "cniVersion": "0.3.1",
       "type": "macvlan",
       "master": "ens6",
@@ -34,187 +36,10 @@ spec:
       "ipam": {
         "type": "static",
         "addresses": [
-                {
-                        "address": "192.168.10.10/24",
-                        "gateway": "192.168.10.1"
-                }
+          {
+            "address": "192.168.10.10/24",
+            "gateway": "192.168.10.1"
+          }
         ]
       }
-    }'
----
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition 
-metadata:
-  name: f5gc-gnbsim-n1n2-01
-spec:
-  config: '{ 
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "172.16.10.11/24",
-                        "gateway": "172.16.10.1"
-                }
-        ]
-      }
-    }'
-
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: f5gc-gnbsim-n3-01
-spec:
-  config: '{
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "192.168.10.11/24",
-                        "gateway": "192.168.10.1"
-                }
-        ]
-      }
-    }'
----
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition 
-metadata:
-  name: f5gc-gnbsim-n1n2-02
-spec:
-  config: '{ 
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "172.16.10.12/24",
-                        "gateway": "172.16.10.1"
-                }
-        ]
-      }
-    }'
-
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: f5gc-gnbsim-n3-02
-spec:
-  config: '{
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "192.168.10.12/24",
-                        "gateway": "192.168.10.1"
-                }
-        ]
-      }
-    }'
----
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition 
-metadata:
-  name: f5gc-gnbsim-n1n2-03
-spec:
-  config: '{ 
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "172.16.10.13/24",
-                        "gateway": "172.16.10.1"
-                }
-        ]
-      }
-    }'
-
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: f5gc-gnbsim-n3-03
-spec:
-  config: '{
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "192.168.10.13/24",
-                        "gateway": "192.168.10.1"
-                }
-        ]
-      }
-    }'
----
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition 
-metadata:
-  name: f5gc-gnbsim-n1n2-04
-spec:
-  config: '{ 
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "172.16.10.14/24",
-                        "gateway": "172.16.10.1"
-                }
-        ]
-      }
-    }'
-
----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: f5gc-gnbsim-n3-04
-spec:
-  config: '{
-      "cniVersion": "0.3.1",
-      "type": "macvlan",
-      "master": "ens6",
-      "mode": "bridge",
-      "ipam": {
-        "type": "static",
-        "addresses": [
-                {
-                        "address": "192.168.10.14/24",
-                        "gateway": "192.168.10.1"
-                }
-        ]
-      }
-    }'
----
+    }
