@@ -1,4 +1,4 @@
-FROM golang:1.14.4-stretch AS builder
+FROM golang:1.16.2-buster AS builder
 
 ARG FREE5GC_VERSION=main
 
@@ -9,7 +9,7 @@ LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
 RUN apt-get update
-RUN apt-get -y install gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev apt-transport-https ca-certificates tree
+RUN apt-get -y install gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev apt-transport-https ca-certificates libpcap-dev tree
 RUN apt-get clean
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
@@ -20,8 +20,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt-get update -qq
 RUN apt-get install -y yarn
 
-# Get Free5GC v3.0.5
-ENV FREE5GC_VERSION=v3.0.5
+# Get Free5GC
 RUN cd $GOPATH/src \
     && git clone --recursive -j 33 -b ${FREE5GC_VERSION} https://github.com/free5gc/free5gc.git \
     && cd free5gc
@@ -52,6 +51,9 @@ RUN tree /go/src/free5gc/src/upf/build
 RUN cd $GOPATH/src/free5gc/webconsole \
     && CGO_ENABLED=0 go build -a -installsuffix nocgo -o webui -x server.go
 
+# Get Httpdump
+RUN go get github.com/hsiafan/httpdump
+
 # Alpine is used for debug purpose. You can use scratch for a smaller footprint.
 FROM alpine
 
@@ -62,6 +64,9 @@ LABEL description="Free5GC open source 5G Core Network, Stage 3"
 LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
+
+WORKDIR /httpdump
+COPY --from=builder /go/bin/httpdump ./
 
 WORKDIR /free5gc
 RUN mkdir -p config/ support/TLS/ public
