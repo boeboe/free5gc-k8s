@@ -45,7 +45,6 @@ RUN cd $GOPATH/src/free5gc && \
 # Build NFs (AMF, AUSF, N3IWF, NRF, NSSF, PCF, SMF, UDM, UDR, UPF)
 RUN cd $GOPATH/src/free5gc \
     && make all
-RUN tree /go/src/free5gc/src/upf/build
 
 # Build WebUI
 RUN cd $GOPATH/src/free5gc/webconsole \
