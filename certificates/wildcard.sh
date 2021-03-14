@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-CA_CERT_DIR=./ca
+ROOT_CA_CERT=./root-cert.pem
+ROOT_CA_KEY=./root-key.pem
 WILDCARD_CERT_DIR=./wildcard
-CERT_DOMAIN_NAME=*.udf-demo.org
+CERT_DOMAIN_NAME=*.aspen-demo.org
 
 echo "Generate a Server Certificate for wildcard"
 openssl genrsa -out ${WILDCARD_CERT_DIR}/wildcard.key 4096
@@ -18,8 +19,8 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=*.udf-demo.org
-DNS.2=udf-demo.org
+DNS.1=*.aspen-demo.org
+DNS.2=aspen-demo.org
 DNS.3=localhost
 IP.1=10.1.1.4
 IP.2=10.1.1.5
@@ -37,8 +38,7 @@ IP.13=127.0.0.1
 EOF
 openssl x509 -req -sha512 -days 3650 \
     -extfile ${WILDCARD_CERT_DIR}/wildcard-v3.ext \
-    -CA ${CA_CERT_DIR}/ca.crt \
-    -CAkey ${CA_CERT_DIR}/ca.key \
+    -CA ${ROOT_CA_CERT} -CAkey ${ROOT_CA_KEY} \
     -CAcreateserial \
     -in ${WILDCARD_CERT_DIR}/wildcard.csr \
     -out ${WILDCARD_CERT_DIR}/wildcard.crt

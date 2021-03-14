@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-CA_CERT_DIR=./ca
+ROOT_CA_CERT=./root-cert.pem
+ROOT_CA_KEY=./root-key.pem
 MONGO_EXPRESS_CERT_DIR=./mongo-express
-CERT_DOMAIN_NAME=mongo-express.udf-demo.org
+CERT_DOMAIN_NAME=mongo-express.aspen-demo.org
 
 echo "Generate a Server Certificate for mongo-express"
 openssl genrsa -out ${MONGO_EXPRESS_CERT_DIR}/mongo-express.key 4096
@@ -18,8 +19,8 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=mongo-express.udf-demo.org
-DNS.2=udf-demo.org
+DNS.1=mongo-express.aspen-demo.org
+DNS.2=aspen-demo.org
 DNS.3=mongo-express
 DNS.4=localhost
 IP.1=10.1.1.4
@@ -30,10 +31,9 @@ IP.5=10.1.1.8
 IP.6=10.1.1.9
 IP.7=127.0.0.1
 EOF
-openssl x509 -req -sha512 -days 3650 \
+openssl x509 -req -sha512 -days 730 \
     -extfile ${MONGO_EXPRESS_CERT_DIR}/mongo-express-v3.ext \
-    -CA ${CA_CERT_DIR}/ca.crt \
-    -CAkey ${CA_CERT_DIR}/ca.key \
+    -CA ${ROOT_CA_CERT} -CAkey ${ROOT_CA_KEY} \
     -CAcreateserial \
     -in ${MONGO_EXPRESS_CERT_DIR}/mongo-express.csr \
     -out ${MONGO_EXPRESS_CERT_DIR}/mongo-express.crt

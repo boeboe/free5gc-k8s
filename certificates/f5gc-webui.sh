@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-CA_CERT_DIR=./ca
+ROOT_CA_CERT=./root-cert.pem
+ROOT_CA_KEY=./root-key.pem
 F5GC_WEBUI_CERT_DIR=./f5gc-webui
-CERT_DOMAIN_NAME=f5gc-webui.udf-demo.org
+CERT_DOMAIN_NAME=f5gc-webui.aspen-demo.org
 
 echo "Generate a Server Certificate for f5gc-webui"
 openssl genrsa -out ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.key 4096
@@ -18,8 +19,8 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=f5gc-webui.udf-demo.org
-DNS.2=udf-demo.org
+DNS.1=f5gc-webui.aspen-demo.org
+DNS.2=aspen-demo.org
 DNS.3=f5gc-webui
 DNS.4=localhost
 IP.1=10.1.1.4
@@ -32,8 +33,7 @@ IP.7=127.0.0.1
 EOF
 openssl x509 -req -sha512 -days 3650 \
     -extfile ${F5GC_WEBUI_CERT_DIR}/f5gc-webui-v3.ext \
-    -CA ${CA_CERT_DIR}/ca.crt \
-    -CAkey ${CA_CERT_DIR}/ca.key \
+    -CA ${ROOT_CA_CERT} -CAkey ${ROOT_CA_KEY} \
     -CAcreateserial \
     -in ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.csr \
     -out ${F5GC_WEBUI_CERT_DIR}/f5gc-webui.crt

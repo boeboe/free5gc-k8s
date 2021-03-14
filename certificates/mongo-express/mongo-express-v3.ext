@@ -5,8 +5,8 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=mongo-express.udf-demo.org
-DNS.2=udf-demo.org
+DNS.1=mongo-express.aspen-demo.org
+DNS.2=aspen-demo.org
 DNS.3=mongo-express
 DNS.4=localhost
 IP.1=10.1.1.4
