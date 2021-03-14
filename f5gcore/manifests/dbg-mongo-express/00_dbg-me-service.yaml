@@ -5,7 +5,6 @@ metadata:
   labels:
     app: dbg-mongo-express
   name: dbg-mongo-express
-  namespace: f5gc
 spec:
   #type: NodePort
   ports:
