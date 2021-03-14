@@ -55,7 +55,7 @@ RUN cd $GOPATH/src/free5gc/webconsole \
 RUN go get github.com/hsiafan/httpdump
 
 # Alpine is used for debug purpose. You can use scratch for a smaller footprint.
-FROM alpine
+FROM alpine:3.13
 
 ARG FREE5GC_VERSION=main
 
@@ -65,11 +65,10 @@ LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
-WORKDIR /httpdump
-COPY --from=builder /go/bin/httpdump ./
-
 WORKDIR /free5gc
-RUN mkdir -p config/ support/TLS/ public
+RUN mkdir -p config/ support/TLS/ public && \
+    apk add git go libpcap-dev && \
+    go get github.com/hsiafan/httpdump
 
 # Copy executables
 COPY --from=builder /go/src/free5gc/bin/* ./
