@@ -1,5 +1,10 @@
 FROM golang:1.14.4-stretch AS builder
 
+ARG FREE5GC_VERSION=main
+
+LABEL component="f5gc-buildbase"
+LABEL description="Free5GC open source 5G Core Network, Stage 3"
+LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
@@ -7,8 +12,7 @@ RUN apt-get update
 RUN apt-get -y install gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev
 RUN apt-get clean
 
-# Get Free5GC v3.0.4
-ENV FREE5GC_VERSION=v3.0.4
+# Get Free5GC
 RUN cd $GOPATH/src \
     && git clone --recursive -j 33 -b ${FREE5GC_VERSION} https://github.com/free5gc/free5gc.git \
     && cd free5gc \
@@ -41,6 +45,13 @@ RUN cd $GOPATH/src/free5gc/webconsole \
 
 # Alpine is used for debug purpose. You can use scratch for a smaller footprint.
 FROM alpine
+
+ARG FREE5GC_VERSION=main
+
+LABEL description="Free5GC open source 5G Core Network, Stage 3"
+LABEL version=${FREE5GC_VERSION}
+LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
+LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
 WORKDIR /free5gc
 RUN mkdir -p config/ support/TLS/ public

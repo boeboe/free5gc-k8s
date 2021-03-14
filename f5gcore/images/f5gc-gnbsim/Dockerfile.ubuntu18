@@ -1,5 +1,10 @@
 FROM golang:1.14.4-stretch AS builder
 
+ARG FREE5GC_VERSION=main
+
+LABEL component="f5gc-gnbsim"
+LABEL description="Free5GC open source 5G Core Network, Stage 3"
+LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 

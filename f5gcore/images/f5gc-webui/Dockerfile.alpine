@@ -1,8 +1,12 @@
 FROM boeboe/f5gc-build-base:v3.0.4 AS builder
 FROM alpine:3.8
 
-LABEL description="Free5GC open source 5G Core Network" \
-    version="Stage 3"
+ARG FREE5GC_VERSION=main
+
+LABEL component="f5gc-webui"
+LABEL description="Free5GC open source 5G Core Network, Stage 3"
+LABEL version=${FREE5GC_VERSION}
+LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
 ENV F5GC_MODULE webui

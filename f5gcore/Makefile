@@ -1,27 +1,29 @@
 # Makefile
-F5GC_BASE_NAME          ?= f5gc-build-base
-F5GC_GNBSIM_NAME        ?= f5gc-gnbsim
-F5GC_AMF_NAME           ?= f5gc-amf
-F5GC_SMF_NAME           ?= f5gc-smf
-F5GC_UPF_NAME           ?= f5gc-upf
-F5GC_NRF_NAME		 				?= f5gc-nrf
-F5GC_AUSF_NAME          ?= f5gc-ausf
-F5GC_NSSF_NAME          ?= f5gc-nssf
-F5GC_PCF_NAME           ?= f5gc-pcf
-F5GC_UDM_NAME           ?= f5gc-udm
-F5GC_UDR_NAME           ?= f5gc-udr
-F5GC_WEBUI_NAME		 			?= f5gc-webui
+F5GC_BASE_NAME      ?= f5gc-build-base
+F5GC_GNBSIM_NAME    ?= f5gc-gnbsim
+F5GC_AMF_NAME       ?= f5gc-amf
+F5GC_SMF_NAME       ?= f5gc-smf
+F5GC_UPF_NAME       ?= f5gc-upf
+F5GC_NRF_NAME		 		?= f5gc-nrf
+F5GC_AUSF_NAME      ?= f5gc-ausf
+F5GC_NSSF_NAME      ?= f5gc-nssf
+F5GC_PCF_NAME       ?= f5gc-pcf
+F5GC_UDM_NAME       ?= f5gc-udm
+F5GC_UDR_NAME       ?= f5gc-udr
+F5GC_WEBUI_NAME		 	?= f5gc-webui
+
+FREE5GC_VERSION 		?= v3.0.5
 
 # With or without debug tools
 ifeq ($(DEBUG), true)
 DOCKER_ENV          ?= DOCKER_BUILDKIT=1
-DOCKER_TAG          ?= v3.0.4-dbg
+DOCKER_TAG          ?= ${FREE5GC_VERSION}-dbg
 DOCKER_USER       	?= boeboe
 DEBUG_TOOL_LIST     ?= vim strace net-tools curl netcat-openbsd bash tree tcpdump wget httpie bind-tools iproute2
 DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=true --build-arg DEBUG_TOOL_LIST="${DEBUG_TOOL_LIST}"
 else
 DOCKER_ENV          ?= DOCKER_BUILDKIT=1
-DOCKER_TAG          ?= v3.0.4
+DOCKER_TAG          ?= ${FREE5GC_VERSION}
 DOCKER_USER       	?= boeboe
 DOCKER_BUILD_ARGS   ?= --rm --build-arg DEBUG_TOOLS=false
 endif
@@ -82,6 +84,7 @@ build-base:
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${BASE_IMAGE_NAME} \
 		--file ./images/${F5GC_BASE_NAME}/Dockerfile.alpine \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_BASE_NAME}
 push-base:
 	${DOCKER_ENV} docker push ${BASE_IMAGE_NAME}
@@ -92,7 +95,7 @@ build-gnbsim:
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${GNBSIM_IMAGE_NAME} \
 		--file ./images/${F5GC_GNBSIM_NAME}/Dockerfile.ubuntu18 \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		--no-cache \
 		./images/${F5GC_GNBSIM_NAME}
 push-gnbsim:
@@ -104,7 +107,7 @@ build-amf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${AMF_IMAGE_NAME} \
 		--file ./images/${F5GC_AMF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_AMF_NAME}
 push-amf:
 	${DOCKER_ENV} docker push ${AMF_IMAGE_NAME}
@@ -115,7 +118,7 @@ build-smf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${SMF_IMAGE_NAME} \
 		--file ./images/${F5GC_SMF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_SMF_NAME}
 push-smf:
 	${DOCKER_ENV} docker push ${SMF_IMAGE_NAME}
@@ -126,7 +129,7 @@ build-upf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UPF_IMAGE_NAME} \
 		--file ./images/${F5GC_UPF_NAME}/Dockerfile.ubuntu18 \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_UPF_NAME}
 push-upf:
 	${DOCKER_ENV} docker push ${UPF_IMAGE_NAME}
@@ -137,7 +140,7 @@ build-nrf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${NRF_IMAGE_NAME} \
 		--file ./images/${F5GC_NRF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_NRF_NAME}
 push-nrf:
 	${DOCKER_ENV} docker push ${NRF_IMAGE_NAME}
@@ -148,7 +151,7 @@ build-ausf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${AUSF_IMAGE_NAME} \
 		--file ./images/${F5GC_AUSF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_AUSF_NAME}
 push-ausf:
 	${DOCKER_ENV} docker push ${AUSF_IMAGE_NAME}
@@ -159,7 +162,7 @@ build-nssf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${NSSF_IMAGE_NAME} \
 		--file ./images/${F5GC_NSSF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_NSSF_NAME}
 push-nssf:
 	${DOCKER_ENV} docker push ${NSSF_IMAGE_NAME}
@@ -170,7 +173,7 @@ build-pcf: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${PCF_IMAGE_NAME} \
 		--file ./images/${F5GC_PCF_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_PCF_NAME}
 push-pcf:
 	${DOCKER_ENV} docker push ${PCF_IMAGE_NAME}
@@ -181,7 +184,7 @@ build-udm: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UDM_IMAGE_NAME} \
 		--file ./images/${F5GC_UDM_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_UDM_NAME}
 push-udm:
 	${DOCKER_ENV} docker push ${UDM_IMAGE_NAME}
@@ -192,7 +195,7 @@ build-udr: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${UDR_IMAGE_NAME} \
 		--file ./images/${F5GC_UDR_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_UDR_NAME}
 push-udr:
 	${DOCKER_ENV} docker push ${UDR_IMAGE_NAME}
@@ -203,7 +206,7 @@ build-webui: build-base
 	${DOCKER_ENV} docker build ${DOCKER_BUILD_ARGS} \
 		--tag ${WEBUI_IMAGE_NAME} \
 		--file ./images/${F5GC_WEBUI_NAME}/Dockerfile.alpine \
-		--build-arg TAG=${DOCKER_TAG} \
+		--build-arg FREE5GC_VERSION=${FREE5GC_VERSION} \
 		./images/${F5GC_WEBUI_NAME}
 push-webui:
 	${DOCKER_ENV} docker push ${WEBUI_IMAGE_NAME}
