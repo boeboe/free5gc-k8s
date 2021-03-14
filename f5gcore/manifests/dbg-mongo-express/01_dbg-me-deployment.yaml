@@ -23,7 +23,7 @@ spec:
         - name: ME_CONFIG_BASICAUTH_USERNAME
           value: "admin"
         - name: ME_CONFIG_BASICAUTH_PASSWORD
-          value: "free5gc"
+          value: "admin"
         image: mongo-express:latest
         imagePullPolicy: Always
         name: dbg-mongo-express
