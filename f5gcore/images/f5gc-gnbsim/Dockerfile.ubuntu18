@@ -15,7 +15,7 @@ RUN apt-get update && \
 
 # Get and Build GNBSIM
 RUN cd $GOPATH/src && \
-    git clone https://github.com/hhorai/gnbsim && \
+    git clone https://github.com/boeboe/gnbsim && \
     cd gnbsim && \
     make -j`nproc`
 
