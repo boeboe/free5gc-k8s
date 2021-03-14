@@ -51,7 +51,7 @@ view:
 #------------------------------------------------------------------------
 ##install-ca:		install CA on your host system
 install-ca:
-	sudo cp ./ca/ca.crt /usr/local/share/ca-certificates/aspen-demo.org.crt
+	sudo cp root-cert.pem /usr/local/share/ca-certificates/aspen-demo.org.crt
 	sudo update-ca-certificates
 
 #------------------------------------------------------------------------
