@@ -1,4 +1,4 @@
-FROM boeboe/f5gc-build-base:v3.0.4 AS builder
+FROM boeboe/f5gc-build-base:v3.0.5 AS builder
 FROM alpine:3.8
 
 ARG FREE5GC_VERSION=main

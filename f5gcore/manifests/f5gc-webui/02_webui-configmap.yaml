@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: f5gc-webui-config
 data:
-  webuicfg.conf: |
+  webuicfg.yaml: |
     info:
       version: 1.0.0
       description: WebUI initial local configuration

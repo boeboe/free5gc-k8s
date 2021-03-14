@@ -333,76 +333,19 @@ data:
               homeSnssai:
                 sst: 1
                 sd: 3
-    
-  free5GC.conf: |
+
     db_uri: mongodb://f5gc-mongodb:27017/free5gc
     
-    #all logging levels
-    #panic
-    #fatal
-    #error
-    #warn
-    #debug
-    #debug
-    #trace
+    # the kind of log output
+      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: enable the caller report or not, value: true or false
     logger:
-    # network function
-      AMF:
+      NSSF:
         debugLevel: debug
-        ReportCaller: true
-      SMF:
-        debugLevel: debug
-        ReportCaller: true
-      UDR:
-        debugLevel: debug
-        ReportCaller: true
-      UDM:
-        debugLevel: debug
-        ReportCaller: true
-      NRF:
-        debugLevel: debug
-        ReportCaller: true
-      PCF:
-        debugLevel: debug
-        ReportCaller: true
-      AUSF:
-        debugLevel: debug
-        ReportCaller: true
-      N3IWF:
-        debugLevel: debug
-        ReportCaller: true
-    # library
-      NAS:
-        debugLevel: debug
-        ReportCaller: true
-      FSM:
-        debugLevel: debug
-        ReportCaller: true
-      NGAP:
-        debugLevel: debug
-        ReportCaller: true
-      NamfComm:
-        debugLevel: debug
-        ReportCaller: true
-      NamfEventExposure:
-        debugLevel: debug
-        ReportCaller: true
-      NsmfPDUSession:
-        debugLevel: debug
-        ReportCaller: true
-      NudrDataRepository:
-        debugLevel: debug
-        ReportCaller: true
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
       OpenApi:
-        debugLevel: debug
-        ReportCaller: true
-      Aper:
-        debugLevel: debug
-        ReportCaller: true
-      CommonConsumerTest:
-        debugLevel: debug
-        ReportCaller: true
-    # webui
-      WEBUI:
-        debugLevel: debug
-        ReportCaller: true
+        debugLevel: info
+        ReportCaller: false

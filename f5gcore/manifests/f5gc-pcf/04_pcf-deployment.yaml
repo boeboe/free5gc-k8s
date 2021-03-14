@@ -26,7 +26,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-pcf
-          image: boeboe/f5gc-pcf:v3.0.4
+          image: boeboe/f5gc-pcf:v3.0.5
           imagePullPolicy: Always
           securityContext:
             privileged: false

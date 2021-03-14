@@ -2,21 +2,29 @@ FROM golang:1.14.4-stretch AS builder
 
 ARG FREE5GC_VERSION=main
 
-LABEL component="f5gc-buildbase"
+LABEL component="f5gc-build-base"
 LABEL description="Free5GC open source 5G Core Network, Stage 3"
 LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
 LABEL source-repo="https://github.com/boeboe/free5gc-k8s"
 
 RUN apt-get update
-RUN apt-get -y install gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev
+RUN apt-get -y install gcc cmake autoconf libtool pkg-config libmnl-dev libyaml-dev apt-transport-https ca-certificates tree
 RUN apt-get clean
 
-# Get Free5GC
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
+
+RUN apt remove cmdtest yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update -qq
+RUN apt-get install -y yarn
+
+# Get Free5GC v3.0.5
+ENV FREE5GC_VERSION=v3.0.5
 RUN cd $GOPATH/src \
     && git clone --recursive -j 33 -b ${FREE5GC_VERSION} https://github.com/free5gc/free5gc.git \
-    && cd free5gc \
-    && go mod download
+    && cd free5gc
 
 COPY Makefile $GOPATH/src/free5gc/Makefile
 
@@ -28,16 +36,17 @@ COPY Makefile $GOPATH/src/free5gc/Makefile
 
 COPY patches/ $GOPATH/src/free5gc/patches/
 RUN cd $GOPATH/src/free5gc && \
-    cp patches/nas/20201104_nasConvert.patch lib/nas && \
-    cp patches/nrf/20201110_nrf_smf_selection_by_slice.patch src/nrf && \
-    cd $GOPATH/src/free5gc/lib/nas && \
-    git apply --ignore-whitespace 20201104_nasConvert.patch && \
-    cd $GOPATH/src/free5gc/src/nrf && \
+    # cp patches/nas/20201104_nasConvert.patch lib/nas && \
+    cp patches/nrf/20201110_nrf_smf_selection_by_slice.patch NFs/nrf && \
+    # cd $GOPATH/src/free5gc/lib/nas && \
+    # git apply --ignore-whitespace 20201104_nasConvert.patch && \
+    cd $GOPATH/src/free5gc/NFs/nrf && \
     git apply --ignore-whitespace 20201110_nrf_smf_selection_by_slice.patch
 
 # Build NFs (AMF, AUSF, N3IWF, NRF, NSSF, PCF, SMF, UDM, UDR, UPF)
 RUN cd $GOPATH/src/free5gc \
     && make all
+RUN tree /go/src/free5gc/src/upf/build
 
 # Build WebUI
 RUN cd $GOPATH/src/free5gc/webconsole \
@@ -48,6 +57,7 @@ FROM alpine
 
 ARG FREE5GC_VERSION=main
 
+LABEL component="f5gc-build-base"
 LABEL description="Free5GC open source 5G Core Network, Stage 3"
 LABEL version=${FREE5GC_VERSION}
 LABEL maintainer="Bart Van Bos <bartvanbos@gmail.com>"
@@ -58,19 +68,19 @@ RUN mkdir -p config/ support/TLS/ public
 
 # Copy executables
 COPY --from=builder /go/src/free5gc/bin/* ./
-COPY --from=builder /go/src/free5gc/src/upf/build/bin/* ./
+COPY --from=builder /go/src/free5gc/NFs/upf/build/bin/* ./
 COPY --from=builder /go/src/free5gc/webconsole/webui ./
 
 # Copy static files (webui frontend)
 COPY --from=builder /go/src/free5gc/webconsole/public ./public
 
 # Copy linked libs
-COPY --from=builder /go/src/free5gc/src/upf/build/updk/src/third_party/libgtp5gnl/lib/libgtp5gnl.so.0 ./
-COPY --from=builder /go/src/free5gc/src/upf/build/utlt_logger/liblogger.so ./
+COPY --from=builder /go/src/free5gc/NFs/upf/build/updk/src/third_party/libgtp5gnl/lib/libgtp5gnl.so.0 ./
+COPY --from=builder /go/src/free5gc/NFs/upf/build/utlt_logger/liblogger.so ./
 
 # Copy configuration files (not used for now)
 COPY --from=builder /go/src/free5gc/config/* ./config/
-COPY --from=builder /go/src/free5gc/src/upf/build/config/* ./config/
+COPY --from=builder /go/src/free5gc/NFs/upf/build/config/* ./config/
 
 # Copy default certificates (not used for now)
 COPY --from=builder /go/src/free5gc/support/TLS/* ./support/TLS/

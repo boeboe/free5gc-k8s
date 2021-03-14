@@ -34,7 +34,7 @@ spec:
         runAsGroup: 0
       containers:
         - name: f5gc-nssf
-          image: boeboe/f5gc-nssf:v3.0.4
+          image: boeboe/f5gc-nssf:v3.0.5
           imagePullPolicy: Always
           securityContext:
             privileged: false

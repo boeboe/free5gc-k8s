@@ -10,12 +10,13 @@ data:
       description: NRF initial local configuration
     
     configuration:
-      MongoDBName: "free5gc"
-      MongoDBUrl: "mongodb://f5gc-mongodb:27017"
-      DefaultServiceIP: "f5gc-nrf"
+      MongoDBName: free5gc
+      MongoDBUrl: mongodb://f5gc-mongodb:27017
+      DefaultServiceIP: f5gc-nrf
       sbi:
         scheme: http
-        ipv4Addr: 0.0.0.0
+        registerIPv4: f5gc-nrf
+        bindingIPv4: 0.0.0.0
         port: 29510
       DefaultPlmnId:
         mcc: "208"
@@ -23,75 +24,23 @@ data:
       serviceNameList:
         - nnrf-nfm
         - nnrf-disc
+      nrfUri: http://f5gc-nrf:29510
 
-  free5GC.conf: |
     db_uri: mongodb://f5gc-mongodb:27017/free5GC
-    #all logging levels
-    #panic
-    #fatal
-    #error
-    #warn
-    #info
-    #debug
-    #trace
+    
+    # the kind of log output
+      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: enable the caller report or not, value: true or false
     logger:
-    # network function
-      AMF:
-        debugLevel: info
-        ReportCaller: true
-      SMF:
-        debugLevel: info
-        ReportCaller: true
-      UDR:
-        debugLevel: info
-        ReportCaller: true
-      UDM:
-        debugLevel: info
-        ReportCaller: true
       NRF:
         debugLevel: trace
         ReportCaller: true
-      PCF:
-        debugLevel: info
-        ReportCaller: true
-      AUSF:
-        debugLevel: info
-        ReportCaller: true
-      N3IWF:
-        debugLevel: info
-        ReportCaller: true
-    # library
-      NAS:
-        debugLevel: info
-        ReportCaller: true
-      FSM:
-        debugLevel: info
-        ReportCaller: true
-      NGAP:
-        debugLevel: info
-        ReportCaller: true
-      NamfComm:
-        debugLevel: info
-        ReportCaller: true
-      NamfEventExposure:
-        debugLevel: info
-        ReportCaller: true
-      NsmfPDUSession:
-        debugLevel: info
-        ReportCaller: true
-      NudrDataRepository:
-        debugLevel: info
-        ReportCaller: true
+      PathUtil:
+        debugLevel: trace
+        ReportCaller: false
       OpenApi:
-        debugLevel: debug
-        ReportCaller: true
-      Aper:
-        debugLevel: info
-        ReportCaller: true
-      CommonConsumerTest:
-        debugLevel: info
-        ReportCaller: true
-    # webui
-      WEBUI:
-        debugLevel: info
+        debugLevel: trace
+        ReportCaller: false
+      MongoDBLibrary:
+        debugLevel: trace
         ReportCaller: true

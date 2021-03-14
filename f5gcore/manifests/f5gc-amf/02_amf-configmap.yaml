@@ -58,74 +58,31 @@ data:
       t3502: 720
       t3512: 3600
       non3gppDeregistrationTimer: 1000
-  free5GC.conf: |
+
     db_uri: mongodb://f5gc-mongodb:27017/free5GC
-    #all logging levels
-    #panic
-    #fatal
-    #error
-    #warn
-    #info
-    #debug
-    #trace
+    
+    # the kind of log output
+      # debugLevel: how detailed to output, value: trace, debug, info, warn, error, fatal, panic
+      # ReportCaller: enable the caller report or not, value: true or false
     logger:
-    # network function
       AMF:
-        debugLevel: trace
-        ReportCaller: true
-      SMF:
-        debugLevel: info
-        ReportCaller: true
-      UDR:
-        debugLevel: info
-        ReportCaller: true
-      UDM:
-        debugLevel: info
-        ReportCaller: true
-      NRF:
-        debugLevel: info
-        ReportCaller: true
-      PCF:
-        debugLevel: info
-        ReportCaller: true
-      AUSF:
-        debugLevel: info
-        ReportCaller: true
-      N3IWF:
-        debugLevel: info
-        ReportCaller: true
-    # library
+        debugLevel: debug
+        ReportCaller: false
       NAS:
         debugLevel: info
-        ReportCaller: true
+        ReportCaller: false
       FSM:
         debugLevel: info
-        ReportCaller: true
+        ReportCaller: false
       NGAP:
-        debugLevel: trace
-        ReportCaller: true
-      NamfComm:
-        debugLevel: debug
-        ReportCaller: true
-      NamfEventExposure:
         debugLevel: info
-        ReportCaller: true
-      NsmfPDUSession:
-        debugLevel: info
-        ReportCaller: true
-      NudrDataRepository:
-        debugLevel: info
-        ReportCaller: true
-      OpenApi:
-        debugLevel: debug
-        ReportCaller: true
+        ReportCaller: false
       Aper:
         debugLevel: info
-        ReportCaller: true
-      CommonConsumerTest:
+        ReportCaller: false
+      PathUtil:
         debugLevel: info
-        ReportCaller: true
-    # webui
-      WEBUI:
+        ReportCaller: false
+      OpenApi:
         debugLevel: info
-        ReportCaller: true
+        ReportCaller: false
