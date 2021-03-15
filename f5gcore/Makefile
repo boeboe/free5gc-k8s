@@ -46,9 +46,12 @@ WEBUI_IMAGE_NAME        ?= ${DOCKER_USER}/${F5GC_WEBUI_NAME}:${DOCKER_TAG}
 # Kubernetes deployment folders
 K8S_DEPLOY_DIR								?= ./manifests
 GNBSIM_K8S_DEPLOY_DIR   			?= ${K8S_DEPLOY_DIR}/f5gc-gnbsim
+GNBSIM2_K8S_DEPLOY_DIR   			?= ${K8S_DEPLOY_DIR}/f5gc-gnbsim-2
 AMF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-amf
 SMF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-smf
-UPF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-upf
+SMF2_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-smf-2
+UPF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-upf-2
+UPF2_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-upf
 NRF_K8S_DEPLOY_DIR      			?= ${K8S_DEPLOY_DIR}/f5gc-nrf
 AUSF_K8S_DEPLOY_DIR     			?= ${K8S_DEPLOY_DIR}/f5gc-ausf
 NSSF_K8S_DEPLOY_DIR     			?= ${K8S_DEPLOY_DIR}/f5gc-nssf
@@ -59,6 +62,7 @@ WEBUI_K8S_DEPLOY_DIR    			?= ${K8S_DEPLOY_DIR}/f5gc-webui
 MONGODB_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-mongodb
 MONGO_EXPRESS_K8S_DEPLOY_DIR	?= ${K8S_DEPLOY_DIR}/dbg-mongo-express
 N6DUMMY_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy
+N6DUMMY2_K8S_DEPLOY_DIR  			?= ${K8S_DEPLOY_DIR}/f5gc-n6dummy-2
 
 MONGO_EXPRESS_CERT_DIR=../certificates/mongo-express
 F5GC_WEBUI_CERT_DIR=../certificates/f5gc-webui
@@ -234,10 +238,14 @@ deploy:  ## Deploy F5GCore Components
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
+	kubectl apply -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${GNBSIM_K8S_DEPLOY_DIR} || true
+	kubectl apply -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${AMF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${SMF_K8S_DEPLOY_DIR} || true
+	kubectl apply -k ${SMF2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${UPF_K8S_DEPLOY_DIR} || true
+	kubectl apply -k ${UPF2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${NRF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${AUSF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${NSSF_K8S_DEPLOY_DIR} || true
@@ -255,10 +263,14 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete -k ${NSSF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${AUSF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${NRF_K8S_DEPLOY_DIR} || true
+	kubectl delete -k ${UPF2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${UPF_K8S_DEPLOY_DIR} || true
+	kubectl delete -k ${SMF2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${SMF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${AMF_K8S_DEPLOY_DIR} || true
+	kubectl delete -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${GNBSIM_K8S_DEPLOY_DIR} || true
+	kubectl delete -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
