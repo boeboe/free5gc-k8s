@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-gnbsim-script-2
+data:
+  run.sh: |
+    #!/usr/bin/env bash
+
+    while true ; do
+      ./example -ip f5gc-amf
+      sleep 5
+      ip link delete gtp-gnb
+    done

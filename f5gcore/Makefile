@@ -278,12 +278,18 @@ view-all:  ## View all free5gc pods, services and serviceaccounts
 exec-gnbsim:  ## Kubectl exec in gnbsim container for bash console
 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
 
-test-gnbsim:  ## Kubectl exec in gnbsim container for load test
+exec-gnbsim-2:  ## Kubectl exec in gnbsim-2 container for bash console
+	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
+
+test-gnbsim:  ## Kubectl exec in gnbsim container for 5gcore flow test
 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
 
-test-ingress:  ## Test ingress exposed service
-	curl -v -HHost:f5gc-webui.aspen-demo.org --resolve f5gc-webui.aspen-demo.org:31002:10.1.1.6 https://f5gc-webui.aspen-demo.org:31002/
-	curl -v -HHost:mongo-express.aspen-demo.org --resolve mongo-express.aspen-demo.org:31002:10.1.1.6 https://mongo-express.aspen-demo.org:31002/
-	echo | openssl s_client -showcerts -servername f5gc-webui.aspen-demo.org -connect f5gc-webui.aspen-demo.org:31002 2>/dev/null | openssl x509 -inform pem -noout -text
-	echo | openssl s_client -showcerts -servername f5gc-webui -connect f5gc-webui:31002 2>/dev/null | openssl x509 -inform pem -noout -text
-	echo | openssl s_client -showcerts -servername 10.1.1.6 -connect 10.1.1.6:31002 2>/dev/null | openssl x509 -inform pem -noout -text
+test-gnbsim-2:  ## Kubectl exec in gnbsim-2 container 5gcore flow test
+	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
+
+# test-ingress:  ## Test ingress exposed service
+# 	curl -v -HHost:f5gc-webui.aspen-demo.org --resolve f5gc-webui.aspen-demo.org:31002:10.1.1.6 https://f5gc-webui.aspen-demo.org:31002/
+# 	curl -v -HHost:mongo-express.aspen-demo.org --resolve mongo-express.aspen-demo.org:31002:10.1.1.6 https://mongo-express.aspen-demo.org:31002/
+# 	echo | openssl s_client -showcerts -servername f5gc-webui.aspen-demo.org -connect f5gc-webui.aspen-demo.org:31002 2>/dev/null | openssl x509 -inform pem -noout -text
+# 	echo | openssl s_client -showcerts -servername f5gc-webui -connect f5gc-webui:31002 2>/dev/null | openssl x509 -inform pem -noout -text
+# 	echo | openssl s_client -showcerts -servername 10.1.1.6 -connect 10.1.1.6:31002 2>/dev/null | openssl x509 -inform pem -noout -text

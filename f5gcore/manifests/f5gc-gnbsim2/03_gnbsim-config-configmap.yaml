@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: f5gc-gnbsim-config
+  name: f5gc-gnbsim-config-2
 data:
   example.json: |
     {
@@ -35,8 +35,8 @@ data:
       "PagingDRX" : "v32",
       "RANUENGAPID" : 0,
       "UE" : {
-        "imeisv" : "208930000000001",
-        "msin" : "0000000001",
+        "imeisv" : "208930000000002",
+        "msin" : "0000000002",
         "mcc" : 208,
         "mnc" : 93,
         "RoutingIndicator" : 1234,
@@ -47,7 +47,7 @@ data:
         },
         "snssai" : {
           "sst" : 1,
-          "sd" : "112233"
+          "sd" : "010203"
         },
         "dnn" : "internet",
         "url" : "http://localhost"
@@ -68,7 +68,7 @@ data:
           "TAC" : "0x000001"
         }
       },
-      "NGAPPeerAddr": "172.16.10.21",
-      "GTPuLocalAddr" : "192.168.10.11",
+      "NGAPPeerAddr": "172.16.10.22",
+      "GTPuLocalAddr" : "192.168.10.12",
       "GTPuIFname" : "net2"
     }

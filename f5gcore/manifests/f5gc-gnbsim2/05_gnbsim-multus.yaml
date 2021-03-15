@@ -2,7 +2,7 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition 
 metadata:
-  name: f5gc-gnbsim-n1n2
+  name: f5gc-gnbsim-2-n1n2
 spec:
   config: |
     { 
@@ -14,7 +14,7 @@ spec:
         "type": "static",
         "addresses": [
           {
-            "address": "172.16.10.11/24",
+            "address": "172.16.10.12/24",
             "gateway": "172.16.10.1"
           }
         ]
@@ -25,7 +25,7 @@ spec:
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: f5gc-gnbsim-n3
+  name: f5gc-gnbsim-2-n3
 spec:
   config: |
     {
@@ -37,7 +37,7 @@ spec:
         "type": "static",
         "addresses": [
           {
-            "address": "192.168.10.11/24",
+            "address": "192.168.10.12/24",
             "gateway": "192.168.10.1"
           }
         ]
