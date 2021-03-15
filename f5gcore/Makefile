@@ -238,14 +238,14 @@ deploy:  ## Deploy F5GCore Components
 	kubectl apply -k ${MONGODB_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
-	kubectl apply -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
+	# kubectl apply -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${GNBSIM_K8S_DEPLOY_DIR} || true
-	kubectl apply -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
+	# kubectl apply -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${AMF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${SMF_K8S_DEPLOY_DIR} || true
-	kubectl apply -k ${SMF2_K8S_DEPLOY_DIR} || true
+	# kubectl apply -k ${SMF2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${UPF_K8S_DEPLOY_DIR} || true
-	kubectl apply -k ${UPF2_K8S_DEPLOY_DIR} || true
+	# kubectl apply -k ${UPF2_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${NRF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${AUSF_K8S_DEPLOY_DIR} || true
 	kubectl apply -k ${NSSF_K8S_DEPLOY_DIR} || true
@@ -263,14 +263,14 @@ undeploy: ## Undeploy F5GCore Components
 	kubectl delete -k ${NSSF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${AUSF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${NRF_K8S_DEPLOY_DIR} || true
-	kubectl delete -k ${UPF2_K8S_DEPLOY_DIR} || true
+	# kubectl delete -k ${UPF2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${UPF_K8S_DEPLOY_DIR} || true
-	kubectl delete -k ${SMF2_K8S_DEPLOY_DIR} || true
+	# kubectl delete -k ${SMF2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${SMF_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${AMF_K8S_DEPLOY_DIR} || true
-	kubectl delete -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
+	# kubectl delete -k ${GNBSIM2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${GNBSIM_K8S_DEPLOY_DIR} || true
-	kubectl delete -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
+	# kubectl delete -k ${N6DUMMY2_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${N6DUMMY_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGO_EXPRESS_K8S_DEPLOY_DIR} || true
 	kubectl delete -k ${MONGODB_K8S_DEPLOY_DIR} || true
@@ -290,14 +290,14 @@ view-all:  ## View all free5gc pods, services and serviceaccounts
 exec-gnbsim:  ## Kubectl exec in gnbsim container for bash console
 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
 
-exec-gnbsim-2:  ## Kubectl exec in gnbsim-2 container for bash console
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
+# exec-gnbsim-2:  ## Kubectl exec in gnbsim-2 container for bash console
+# 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- /bin/bash
 
 test-gnbsim:  ## Kubectl exec in gnbsim container for 5gcore flow test
 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
 
-test-gnbsim-2:  ## Kubectl exec in gnbsim-2 container 5gcore flow test
-	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
+# test-gnbsim-2:  ## Kubectl exec in gnbsim-2 container 5gcore flow test
+# 	kubectl -n f5gc exec -it `kubectl get pods -n f5gc -l app=f5gc-gnbsim-2 --output=jsonpath={.items..metadata.name}` -c f5gc-gnbsim -- ./run.sh
 
 # test-ingress:  ## Test ingress exposed service
 # 	curl -v -HHost:f5gc-webui.aspen-demo.org --resolve f5gc-webui.aspen-demo.org:31002:10.1.1.6 https://f5gc-webui.aspen-demo.org:31002/
