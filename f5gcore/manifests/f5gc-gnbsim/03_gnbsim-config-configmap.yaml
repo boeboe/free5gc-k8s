@@ -69,6 +69,6 @@ data:
         }
       },
       "NGAPPeerAddr": "172.16.10.20",
-      "GTPuLocalAddr" : "192.168.10.11",
+      "GTPuLocalAddr" : "192.168.10.10",
       "GTPuIFname" : "net2"
     }
