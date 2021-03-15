@@ -47,7 +47,7 @@ data:
         },
         "snssai" : {
           "sst" : 1,
-          "sd" : "112233"
+          "sd" : "010203"
         },
         "dnn" : "internet",
         "url" : "http://localhost"
