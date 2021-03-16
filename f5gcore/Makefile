@@ -281,7 +281,7 @@ undeploy: ## Undeploy F5GCore Components
 redeploy: undeploy deploy ## Redeploy F5GCore Components
 
 restart: ## Restart all F5GCore Components
-	kubectl -n f5gc-gnbsim rollout restart deploy
+	kubectl -n f5gc rollout restart deploy
 
 view-all:  ## View all free5gc pods, services and serviceaccounts
 	kubectl get serviceaccounts -n f5gc -o wide 
