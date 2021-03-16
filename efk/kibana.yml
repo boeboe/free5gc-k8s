@@ -106,4 +106,4 @@ kibana.index: ".kibana"
 # Supported languages are the following: English - en , by default , Chinese - zh-CN .
 #i18n.locale: "en"
 
-kibana.autocompleteTimeout: "10000"
+kibana.autocompleteTimeout: 10000
