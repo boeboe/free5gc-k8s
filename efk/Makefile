@@ -23,6 +23,7 @@ install-es-kibana:  ## Install elasticsearch and kibana
 
 config-es-kibana:  ## Install elasticsearch and kibana
 	sudo cp ./elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
+	sudo cp ./jvm.options /etc/elasticsearch/jvm.options
 	sudo chown root:elasticsearch /etc/elasticsearch/elasticsearch.yml
 	sudo chmod 660 /etc/elasticsearch/elasticsearch.yml
 	sudo cp ./kibana.yml /etc/kibana/kibana.yml
