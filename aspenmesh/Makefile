@@ -64,6 +64,10 @@ post-install:  ## Post installation steps
 	helm install --namespace istio-system --set auth.strategy="anonymous" --repo https://kiali.org/helm-charts kiali-server kiali-server
 	kubectl apply -f ./post-install/
 
+post-upgrade:  ## Post upgrade steps
+	helm upgrade --namespace istio-system --set auth.strategy="anonymous" --repo https://kiali.org/helm-charts kiali-server kiali-server
+	kubectl apply -f ./post-install/
+
 post-uninstall:  ## Post uninstallation steps
 	helm uninstall --namespace istio-system kiali-server
 	kubectl delete crd monitoringdashboards.monitoring.kiali.io

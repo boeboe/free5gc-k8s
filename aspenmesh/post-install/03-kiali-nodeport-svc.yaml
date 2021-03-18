@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/part-of: kiali
     app.kubernetes.io/version: v1.30.0
     version: v1.30.0
-  name: kiali
+  name: kiali-np
   namespace: istio-system
 spec:
   ports:
