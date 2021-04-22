@@ -21,7 +21,7 @@ help: ## This help
 
 .DEFAULT_GOAL := help
 
-install: istioctl  ## Install aspenmesh
+install:  ## Install aspenmesh
 	kubectl create ns ${ASPEN_NAMESPACE} || true
 	kubectl create secret generic cacerts -n ${ASPEN_NAMESPACE} \
 		--from-file=${CERT_DIR}/ca-cert.pem \
