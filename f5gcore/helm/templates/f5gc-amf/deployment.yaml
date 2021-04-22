@@ -1,0 +1,79 @@
+---
+{{- if and .Values.f5gc-amf.enabled -}}
+apiVersion: {{ template "free5gc.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+{{- if .Values.f5gc-amf.deploymentAnnotations }}
+  annotations:
+    {{ toYaml .Values.f5gc-amf.deploymentAnnotations | nindent 4 }}
+{{- end }}
+  labels:
+    {{- include "free5gc.f5gc-amf.labels" . | nindent 4 }}
+  name: {{ template "free5gc.f5gc-amf.fullname" . }}
+{{ include "free5gc.namespace" . | indent 2 }}
+
+
+  labels:
+    app: f5gc-amf
+    sliceidx: 6d3d79da-f781-4cd9-813a-dbdad01e01c0
+  name: f5gc-amf
+  annotations:
+    free5gc.org/nssi-id: '27394d25-dbf5-428e-8fc3-f5b2add67115'
+    free5gc.org/nsi-ids: '[
+        { "id": "4e6db941-47d6-4fce-9c71-f7eb35a75d03" },
+    ]'
+    free5gc.org/supported-snssais: '[
+        { "st": 1,
+          "ssd": "010203",
+        },
+        { "st": 1,
+          "ssd": "112233",
+        },
+    ]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f5gc-amf
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: f5gc-amf
+      annotations:
+        k8s.v1.cni.cncf.io/networks: f5gc-amf-n1n2
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: f5gc-amf
+          image: boeboe/f5gc-amf:v3.0.5-dbg
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+          volumeMounts:
+            - name: f5gc-amf-config
+              mountPath: /free5gc/config
+            - name: f5gc-amf-cert
+              mountPath: /free5gc/support/TLS
+          ports:
+            - containerPort: 29518
+              name: f5gc-amf
+              protocol: TCP
+            - containerPort: 38412
+              name: if-n1n2
+              protocol: SCTP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: f5gc-amf-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: f5gc-amf-cert
+          secret:
+            secretName: f5gc-amf-tls-secret
+        - name: f5gc-amf-config
+          configMap:
+            name: f5gc-amf-config

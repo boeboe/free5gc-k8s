@@ -1,0 +1,15 @@
+--- 
+apiVersion: v2
+appVersion: "3.0.5"
+description: "Helm chart to deploy the Free5GC stack (https://github.com/free5gc/free5gc)"
+engine: gotpl
+home: "https://www.free5gc.org"
+icon: "https://www.free5gc.org/img/free5GC.png"
+maintainers: 
+  - email: bartvanbos@gmail.com
+    name: boeboe
+name: free5gc
+sources: 
+  - "https://github.com/boeboe/free5gc-k8s"
+type: application
+version: "1.0.0"

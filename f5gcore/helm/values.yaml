@@ -1,0 +1,43 @@
+f5gc-amf:
+  ## If false, f5gc-amf will not be installed
+  ##
+  enabled: true
+
+  ## Use a ClusterRole (and ClusterRoleBinding)
+  ## - If set to false - we define a Role and RoleBinding in the defined namespaces ONLY
+  ## This makes f5gc-amf work - for users who do not have ClusterAdmin privs, but wants f5gc-amf to operate on their own namespaces, instead of clusterwide.
+  useClusterRole: true
+
+  ## Set to a rolename to use existing role - skipping role creating - but still doing serviceaccount and rolebinding to the rolename set here.
+  useExistingRole: false
+
+  ## f5gc-amf container name
+  ##
+  name: amf
+
+  ## ConfigMap override where fullname is {{.Release.Name}}-{{.Values.f5gc-amf.configMapOverrideName}}
+  ## Defining configMapOverrideName will cause templates/f5gc-amf/configmap.yaml
+  ## to NOT generate a ConfigMap resource
+  ##
+  configMapOverrideName: ""
+
+  ## The name of a secret in the same kubernetes namespace which contains the f5gc-amf config
+  ## Defining configFromSecret will cause templates/f5gc-amf/configmap.yaml
+  ## to NOT generate a ConfigMap resource
+  ##
+  configFromSecret: ""
+
+  ## Annotations to be added to deployment
+  ##
+  deploymentAnnotations: {}
+
+rbac:
+  create: true
+
+## Define serviceAccount names for components. Defaults to component's fully qualified name.
+##
+serviceAccounts:
+  f5gc-amf:
+    create: true
+    name:
+    annotations: {}

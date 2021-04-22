@@ -1,0 +1,21 @@
+---
+{{- if and .Values.f5gc-amf.enabled .Values.rbac.create .Values.f5gc-amf.useClusterRole -}}
+apiVersion: {{ template "rbac.apiVersion" . }}
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    {{- include "free5gc.f5gc-amf.labels" . | nindent 4 }}
+  name: {{ template "free5gc.f5gc-amf.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "free5gc.serviceAccountName.f5gc-amf" . }}
+{{ include "free5gc.namespace" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+{{- if (not .Values.f5gc-amf.useExistingRole) }}
+  name: {{ template "free5gc.f5gc-amf.fullname" . }}
+{{- else }}
+  name: {{ .Values.f5gc-amf.useExistingRole }}
+{{- end }}
+{{- end }}

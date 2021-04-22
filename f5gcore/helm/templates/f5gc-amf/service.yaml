@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: f5gc-amf
+  name: f5gc-amf
+spec:
+  # type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http-f5gc-amf
+    port: 29518
+    protocol: TCP
+    targetPort: 29518
+  - name: if-n1n2
+    port: 38412
+    protocol: SCTP
+    targetPort: 38412
+  selector:
+    app: f5gc-amf
