@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aspen-mesh-alertmanager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-alertmanager
+    chart: {{ template "aspen-mesh-metrics-collector.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+data:
+  alertmanager.yml: |
+    global: {}
+    receivers:
+    - name: event-manager
+      webhook_configs:
+      - send_resolved: true
+        url: http://{{ template "aspen-mesh-metrics-collector.controlPlaneInstance" . }}/v1/alerts/notification
+    - name: noop
+    - name: slack
+{{- if .Values.slackWebhookUrl }}
+      slack_configs:
+      - api_url: {{ .Values.slackWebhookUrl }}
+        text: |-
+          {{ printf "{{ with index .Alerts 0 -}}" }}
+          *Alert*: {{ printf "{{ .Annotations.synopsis }}" }}
+          {{ printf "{{ if .Annotations.workloadId -}}*Details*:{{ end }}" }}
+          {{ printf "{{ if .Annotations.clusterId -}}• Cluster: `{{ .Annotations.clusterId }}`{{ end }}" }}
+          {{ printf "{{ if .Annotations.namespaceId -}}• Namespace: `{{ .Annotations.namespaceId }}`{{ end }}" }}
+          {{ printf "{{ if .Annotations.workloadId -}}• Workload: `{{ .Annotations.workloadId }}`{{ end }}" }}
+          {{ printf "{{ end }}" }}
+        title: {{ printf "\"{{ with index .Alerts 0 -}}{{ .Annotations.title }}{{ end -}}\" " }}
+        title_link: {{ printf "\"{{ with index .Alerts 0 -}}{{ .Annotations.link }}{{ end -}}\" " }}
+        color: {{ printf "\"{{ with index .Alerts 0 -}}{{ .Annotations.color }}{{ end -}}\" " }}
+{{- end }}
+    route:
+      group_by:
+      - destination_workload
+      - destination_workload_namespace
+      - alertname
+      group_interval: 1m
+      group_wait: 1s
+      receiver: event-manager
+      repeat_interval: 24y
+      routes:
+      - match:
+          receiver_name: slack
+        receiver: noop

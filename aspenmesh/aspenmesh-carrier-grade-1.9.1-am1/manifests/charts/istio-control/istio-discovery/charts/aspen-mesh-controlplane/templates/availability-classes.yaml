@@ -1,0 +1,89 @@
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: instantaneous
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 100
+  - name: max5xxErrorPercent
+    value: 5
+  description:
+    humanReadableName: "Instantaneous"
+    value: "Applications delivering information to humans in realtime such as online gaming, VR/AR, telerobotics. These applications tolerate a higher number of errors because the client UI prioritizes current information."
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: user-content
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 300
+  - name: max5xxErrorPercent
+    value: 0.1
+  description:
+    humanReadableName: "User Content"
+    value: "Applications rendering webpages for human viewing, such as a landing page, product catalog page or similar."
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: dynamic-user-interaction
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 750
+  - name: max5xxErrorPercent
+    value: 0.1
+  description:
+    humanReadableName: "Dynamic User Interaction"
+    value: "Applications handling user interactions that are expected to be fast, like navigating through related objects in a dashboard."
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: complex-user-interaction
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 4000
+  - name: max5xxErrorPercent
+    value: 0.1
+  description:
+    humanReadableName: "Complex User Interaction"
+    value: "Applications handling user interactions that users understand may involve complex backend operations, like creating a new account or purchasing the contents of the shopping cart."
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: background-utility
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 2000
+  - name: max5xxErrorPercent
+    value: 5
+  description:
+    humanReadableName: "Background Utility"
+    value: "Background non-critical business utility applications that may be compressing databases, or managing archival storage.  Applications must be tolerant of errors or retry."
+---
+apiVersion: policy.aspenmesh.io/v1alpha1
+kind: AvailabilityClass
+metadata:
+  name: background-critical
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: p90LatencyMilliseconds
+    value: 2000
+  - name: max5xxErrorPercent
+    value: 0.1
+  description:
+    humanReadableName: "Background Critical"
+    value: "Background critical business applications such as replicating data for consistency and disaster recovery, or generating audit-critical reports."

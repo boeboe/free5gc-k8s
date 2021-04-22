@@ -1,12 +1,12 @@
 # Makefile
 
 ASPEN_NAMESPACE=istio-system
-ASPEN_VERSION=1.6.14-am4
+ASPEN_VERSION=1.9.1-am1
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/manifests/charts
 CERT_DIR=../certificates/cluster
 
-ISTIO_VERSION=1.6.14
+ISTIO_VERSION=1.9.1
 
 ANALYSIS_EMULATOR_NAMESPACE=analysis-emulator
 ANALYSIS_EMULATOR_CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/samples/aspenmesh/analysis-emulator
@@ -34,7 +34,6 @@ install: istioctl  ## Install aspenmesh
 	sleep 120
 	helm install istio-ingress ${CHART_DIR}/gateways/istio-ingress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	helm install istio-egress ${CHART_DIR}/gateways/istio-egress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
-	helm install istio-telemetry ${CHART_DIR}/istio-telemetry/grafana --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
 
 upgrade:  ## Upgrade aspenmesh
@@ -44,12 +43,10 @@ upgrade:  ## Upgrade aspenmesh
 	sleep 20
 	helm upgrade istio-ingress ${CHART_DIR}/gateways/istio-ingress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	helm upgrade istio-egress ${CHART_DIR}/gateways/istio-egress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
-	helm upgrade istio-telemetry ${CHART_DIR}/istio-telemetry/grafana --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
 
 uninstall:  ## Uninstall aspenmesh
 	kubectl delete -f ./post-install || true
-	helm uninstall istio-telemetry --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istio-egress --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istio-ingress --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istiod --namespace ${ASPEN_NAMESPACE} || true

@@ -1,0 +1,53 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: aspen-mesh-secure-ingress
+  labels:
+    app: aspen-mesh-secure-ingress
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+rules:
+- apiGroups: ["policy.aspenmesh.io"]
+  resources: ["secureingresses", "applications"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["policy.aspenmesh.io"]
+  resources: ["secureingresses/status", "applications/status"]
+  verbs: ["update"]
+- apiGroups: ["networking.istio.io"]
+  resources: ["gateways", "virtualservices", "destinationrules"]
+  verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+- apiGroups: ["authentication.istio.io"]
+  resources: ["policies"]
+  verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["list", "get", "watch"]
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
+  verbs: ["list", "get", "watch"]
+- apiGroups: ["cert-manager.io"]
+  resources: ["issuers", "certificates"]
+  verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+- apiGroups: ["security.istio.io"]
+  resources: ["requestauthentications", "authorizationpolicies"]
+  verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: aspen-mesh-secure-ingress-configurator
+rules:
+- apiGroups: ["certificates.k8s.io"]
+  resources: ["certificatesigningrequests", "certificatesigningrequests/approval"]
+  verbs: ["*"]
+- apiGroups: ["certificates.k8s.io"]
+  resources: ["signers"]
+  resourceNames: ["kubernetes.io/legacy-unknown"]
+  verbs: ["approve"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingwebhookconfigurations"]
+  verbs: ["get", "patch", "update", "create"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get"]

@@ -1,0 +1,11 @@
+global:
+  imagePullSecrets:
+  - aspen-mesh-pull-secret
+  hub: quay.io/aspenmesh/carrier-grade-releases
+
+  imagePullPolicy: Always
+
+image: analysis-emulator-1.9.1-am1
+
+analysis:
+  certPath: /etc/analysis/certs

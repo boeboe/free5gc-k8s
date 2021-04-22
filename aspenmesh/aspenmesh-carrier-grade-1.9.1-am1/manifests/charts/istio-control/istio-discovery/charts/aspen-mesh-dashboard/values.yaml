@@ -1,0 +1,22 @@
+image: # Override with appropriate image and tag.
+
+replicaCount: 2
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "64Mi"
+    cpu: "50m"
+
+global:
+  # Specify pod scheduling arch(amd64, ppc64le, s390x) and weight as follows:
+  #   0 - Never scheduled
+  #   1 - Least preferred
+  #   2 - No preference
+  #   3 - Most preferred
+  # Used by node affinity template. Leaving as amd64 only for now as no AM images
+  # are cross-compiled.
+  arch:
+    amd64: 2
