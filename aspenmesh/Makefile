@@ -82,6 +82,9 @@ analysis-emulator-upgrade:  ## Upgrade aspen mesh packet capture analysis emulat
 	helm upgrade analysis-emulator --namespace ${ANALYSIS_EMULATOR_NAMESPACE} ${ANALYSIS_EMULATOR_CHART_DIR}
 	kubectl label --overwrite ns ${ASPEN_NAMESPACE} ca.istio.io/override=true
 
+analysis-emulator-patch:  ## Patch aspen mesh packet capture analysis emulator
+	kubectl patch -n ${ANALYSIS_EMULATOR_NAMESPACE} deployment analysis-emulator --patch "$(cat ./post-install/analysis-emulator/patch-extra-sidecars.yaml)" 
+
 analysis-emulator-uninstall:  ## Uninstall aspen mesh packet capture analysis emulator
 	helm uninstall analysis-emulator --namespace ${ANALYSIS_EMULATOR_NAMESPACE} || true
 	kubectl delete ns analysis-emulator
