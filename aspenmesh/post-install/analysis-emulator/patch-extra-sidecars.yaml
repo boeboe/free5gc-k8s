@@ -33,3 +33,6 @@ spec:
         - mountPath: /tmp
           name: capture-folder
           readOnly: true
+      volumes:
+      - name: capture-folder
+        emptyDir: {}
