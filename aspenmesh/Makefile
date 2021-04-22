@@ -61,12 +61,12 @@ istioctl:  ## Install istioctl
 
 post-install:  ## Post installation steps
 	helm install --namespace istio-system --set auth.strategy="anonymous" --repo https://kiali.org/helm-charts kiali-server kiali-server
-	helm install --namespace istio-system --repo https://grafana.github.io/helm-charts grafana grafana/grafana
+	helm install --namespace istio-system --repo https://grafana.github.io/helm-charts grafana grafana
 	kubectl apply -f ./post-install/
 
 post-upgrade:  ## Post upgrade steps
 	helm upgrade --namespace istio-system --set auth.strategy="anonymous" --repo https://kiali.org/helm-charts kiali-server kiali-server
-	helm upgrade --namespace istio-system --repo https://grafana.github.io/helm-charts grafana grafana/grafana
+	helm upgrade --namespace istio-system --repo https://grafana.github.io/helm-charts grafana grafana
 	kubectl apply -f ./post-install/
 
 post-uninstall:  ## Post uninstallation steps

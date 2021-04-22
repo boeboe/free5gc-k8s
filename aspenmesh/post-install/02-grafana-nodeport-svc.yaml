@@ -4,7 +4,7 @@ metadata:
   labels:
     app: grafana-np
     release: istiod
-  name: grafana
+  name: grafana-np
   namespace: istio-system
 spec:
   ports:
