@@ -2,6 +2,11 @@ spec:
   template:
     spec:
       containers:
+      - name: aspen-mesh-analysis-emulator
+        volumeMounts:
+        - mountPath: /tmp
+          name: capture-folder
+          readOnly: false
       - name: webshark
         image: webshark/webshark:devel
         imagePullPolicy: Always
