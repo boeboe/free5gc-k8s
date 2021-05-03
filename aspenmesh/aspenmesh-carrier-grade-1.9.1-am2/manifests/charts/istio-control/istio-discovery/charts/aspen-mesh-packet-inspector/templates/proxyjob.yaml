@@ -1,0 +1,44 @@
+{{ if .Values.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-aspen-mesh-packet-inspector
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install, post-upgrade, post-rollback
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    app: aspen-mesh-packet-inspector
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  backoffLimit: 2 
+  template:
+    metadata:
+      name: configure-aspen-mesh-packet-inspector
+      labels:
+        app: aspen-mesh-packet-inspector
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: aspen-mesh-packet-inspector-filter-deployer
+      imagePullSecrets:
+{{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
+{{- end }}
+      containers:
+        - name: proxy-kubectl
+          image: "{{ .Values.global.hub }}:kubectl-{{.Values.global.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args: [ "/tmp/configmap/deploy_envoy_filter.sh", "{{ .Release.Namespace }}" ]
+          volumeMounts:
+            - mountPath: "/tmp/configmap"
+              name: tmp-configmap
+      volumes:
+        - name: tmp-configmap
+          configMap:
+            name: aspen-mesh-packet-inspector-filter-deployer
+{{ end }}

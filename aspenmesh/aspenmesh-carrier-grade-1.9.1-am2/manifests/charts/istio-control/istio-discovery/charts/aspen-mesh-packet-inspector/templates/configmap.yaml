@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aspen-mesh-packet-inspector-filter-deployer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aspen-mesh-packet-inspector
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    istio: aspen-mesh-packet-inspector
+data:
+  deploy_envoy_filter.sh: |-
+{{ .Files.Get "deploy_envoy_filter.sh" | indent 4 }}
+  envoyhttp.yaml: |-
+    apiVersion: networking.istio.io/v1alpha3
+    kind: EnvoyFilter
+    metadata:
+      name: "http-capture-filter"
+      namespace: "istio-system"
+    spec:
+      # NOTE: The three contexts (SIDECAR_INBOUND, SIDECAR_OUTBOUND, and GATEWAY)
+      # are identical except for the context config supplied to the filter. This
+      # allows the filter to know what context it is operating under.
+      configPatches:
+      - applyTo: HTTP_FILTER
+        match:
+          context: SIDECAR_INBOUND
+          listener:
+            filterChain:
+              filter:
+                name: "envoy.http_connection_manager"
+        patch:
+          # TODO: resolve if this should be a MERGE or INSERT_BEFORE operation
+          # operation: MERGE
+          operation: INSERT_BEFORE
+          value:
+            # This is the full filter config including the name and config or typed_config section.
+            name: "aspenmesh.packet.inspector"
+            typed_config:
+              "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+              type_url: type.googleapis.com/envoy.http.aspenmesh_packet_inspector.protos.FilterConfig
+              value:
+                context: SIDECAR_INBOUND
+                node_port: "{{ .Values.nodePort }}"
+                filter_buffer: "{{ .Values.tapfilterBufferSize }}"
+                filter_timeout: "{{ .Values.tapfilterTimeout }}"
+                mac_address: "{{ .Values.macAddress }}"
+      - applyTo: HTTP_FILTER
+        match:
+          context: SIDECAR_OUTBOUND
+          listener:
+            filterChain:
+              filter:
+                name: "envoy.http_connection_manager"
+        patch:
+          # TODO: resolve if this should be a MERGE or INSERT_BEFORE operation
+          # operation: MERGE
+          operation: INSERT_BEFORE
+          value:
+            # This is the full filter config including the name and config or typed_config section.
+            name: "aspenmesh.packet.inspector"
+            typed_config:
+              "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+              type_url: type.googleapis.com/envoy.http.aspenmesh_packet_inspector.protos.FilterConfig
+              value:
+                context: SIDECAR_OUTBOUND
+                node_port: "{{ .Values.nodePort }}"
+                filter_buffer: "{{ .Values.tapfilterBufferSize }}"
+                filter_timeout: "{{ .Values.tapfilterTimeout }}"
+                mac_address: "{{ .Values.macAddress }}"
+      - applyTo: HTTP_FILTER
+        match:
+          context: GATEWAY
+          listener:
+            filterChain:
+              filter:
+                name: "envoy.http_connection_manager"
+        patch:
+          # TODO: resolve if this should be a MERGE or INSERT_BEFORE operation
+          # operation: MERGE
+          operation: INSERT_BEFORE
+          value:
+            # This is the full filter config including the name and config or typed_config section.
+            name: "aspenmesh.packet.inspector"
+            typed_config:
+              "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+              type_url: type.googleapis.com/envoy.http.aspenmesh_packet_inspector.protos.FilterConfig
+              value:
+                context: GATEWAY
+                node_port: "{{ .Values.nodePort }}"
+                filter_buffer: "{{ .Values.tapfilterBufferSize }}"
+                filter_timeout: "{{ .Values.tapfilterTimeout }}"
+                mac_address: "{{ .Values.macAddress }}"
