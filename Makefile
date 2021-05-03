@@ -39,9 +39,9 @@ git-clone-all: ## Clone all git repos
 
 
 git-pull-all: ## Pull all git repos
-	ssh jumphost 		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
-	ssh master  		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
-	ssh node1   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
-	ssh node2   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
-	ssh node3   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
-	ssh node4   		'cd ${REPO_DIR}; git pull ; sudo updatedb' || true
+	ssh jumphost 		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
+	ssh master  		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
+	ssh node1   		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
+	ssh node2   		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
+	ssh node3   		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
+	ssh node4   		'cd ${REPO_DIR}; git pull > /dev/null ; sudo updatedb' || true
