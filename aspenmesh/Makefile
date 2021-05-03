@@ -1,7 +1,7 @@
 # Makefile
 
 ASPEN_NAMESPACE=istio-system
-ASPEN_VERSION=1.9.1-am1
+ASPEN_VERSION=1.9.1-am2
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/manifests/charts
 CERT_DIR=../certificates/cluster
@@ -28,22 +28,20 @@ install:  ## Install aspenmesh
 		--from-file=${CERT_DIR}/ca-key.pem \
 		--from-file=${CERT_DIR}/root-cert.pem \
 		--from-file=${CERT_DIR}/cert-chain.pem 
-	helm install istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} ${HELM_ARGS} || true
-	sleep 10
-	helm install istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
-	sleep 120
+	helm install istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} ${HELM_ARGS} || true ; sleep 10 
+	helm install istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true ; sleep 60
 	helm install istio-ingress ${CHART_DIR}/gateways/istio-ingress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	helm install istio-egress ${CHART_DIR}/gateways/istio-egress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
+	kubectl wait --timeout=5m --for=condition=Ready pods --all -n ${ASPEN_NAMESPACE}
 
 upgrade:  ## Upgrade aspenmesh
-	helm upgrade istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} ${HELM_ARGS} || true
-	sleep 10
-	helm upgrade istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
-	sleep 20
+	helm upgrade istio-base ${CHART_DIR}/base --namespace ${ASPEN_NAMESPACE} ${HELM_ARGS} || true ; sleep 10 
+	helm upgrade istiod ${CHART_DIR}/istio-control/istio-discovery --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true ; sleep 60
 	helm upgrade istio-ingress ${CHART_DIR}/gateways/istio-ingress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	helm upgrade istio-egress ${CHART_DIR}/gateways/istio-egress --namespace ${ASPEN_NAMESPACE} --values ${ASPEN_VALUES} ${HELM_ARGS} || true
 	kubectl apply -f ./post-install/
+	kubectl wait --timeout=5m --for=condition=Ready pods --all -n ${ASPEN_NAMESPACE}
 
 uninstall:  ## Uninstall aspenmesh
 	kubectl delete -f ./post-install || true
@@ -51,6 +49,7 @@ uninstall:  ## Uninstall aspenmesh
 	helm uninstall istio-ingress --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istiod --namespace ${ASPEN_NAMESPACE} || true
 	helm uninstall istio-base --namespace ${ASPEN_NAMESPACE} || true
+	kubectl delete secret generic cacerts -n ${ASPEN_NAMESPACE}
 	kubectl delete ns ${ASPEN_NAMESPACE} || true
 
 reinstall:  post-uninstall uninstall install post-install ## Reinstall aspenmesh
