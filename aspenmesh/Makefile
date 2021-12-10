@@ -1,12 +1,12 @@
 # Makefile
 
 ASPEN_NAMESPACE=istio-system
-ASPEN_VERSION=1.9.5-am1
+ASPEN_VERSION=1.9.8-am1
 ASPEN_VALUES=./udf-values-${ASPEN_VERSION}.yaml
 CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/manifests/charts
 CERT_DIR=../certificates/cluster
 
-ISTIO_VERSION=1.9.5
+ISTIO_VERSION=1.9.8
 
 ANALYSIS_EMULATOR_NAMESPACE=analysis-emulator
 ANALYSIS_EMULATOR_CHART_DIR=./aspenmesh-carrier-grade-${ASPEN_VERSION}/samples/aspenmesh/analysis-emulator
