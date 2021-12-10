@@ -14,6 +14,7 @@ help: ## This help
 
 
 install-k8s: ## Install k8s using kubespray
+	rm -rf /tmp/kubespray
 	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
 	cd kubespray && git checkout release-2.14 && \
 	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
@@ -22,6 +23,7 @@ install-k8s: ## Install k8s using kubespray
 
 
 reset-k8s: ## Reset k8s using kubespray
+	rm -rf /tmp/kubespray
 	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
 	cd kubespray && git checkout release-2.14 && \
 	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
