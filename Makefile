@@ -21,6 +21,14 @@ install-k8s: ## Install k8s using kubespray
 	ansible-playbook -i inventory/aspenmesh/hosts.yaml  --become --become-user=root cluster.yml
 
 
+reset-k8s: ## Reset k8s using kubespray
+	cd /tmp && git clone https://github.com/kubernetes-sigs/kubespray.git && \
+	cd kubespray && git checkout release-2.14 && \
+	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
+	sudo pip3 install -r requirements.txt && \
+	ansible-playbook -i inventory/aspenmesh/hosts.yaml  --become --become-user=root reset.yml
+
+
 reboot-k8s: ## Reboot k8s cluster hosts
 	ssh master sudo reboot || true
 	ssh node1 sudo reboot || true
