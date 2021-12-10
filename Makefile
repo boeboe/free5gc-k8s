@@ -26,7 +26,12 @@ reset-k8s: ## Reset k8s using kubespray
 	cd kubespray && git checkout release-2.14 && \
 	cp -R ${REPO_DIR}/kubespray/aspenmesh /tmp/kubespray/inventory && \
 	sudo pip3 install -r requirements.txt && \
-	ansible-playbook -i inventory/aspenmesh/hosts.yaml  --become --become-user=root reset.yml
+	ansible-playbook -i inventory/aspenmesh/hosts.yaml  --become --become-user=root reset.yml || true
+	ssh master "sudo service kubelet stop ; sudo rm -rf /etc/kubernetes /var/lib/kubelet" || true
+	ssh node1 "sudo service kubelet stop ; sudo rm -rf /etc/kubernetes /var/lib/kubelet" || true
+	ssh node2 "sudo service kubelet stop ; sudo rm -rf /etc/kubernetes /var/lib/kubelet" || true
+	ssh node3 "sudo service kubelet stop ; sudo rm -rf /etc/kubernetes /var/lib/kubelet" || true
+	ssh node4 "sudo service kubelet stop ; sudo rm -rf /etc/kubernetes /var/lib/kubelet" || true
 
 
 reboot-k8s: ## Reboot k8s cluster hosts
